@@ -1,0 +1,6 @@
+__title__ = 'pocstrike'
+__version__ = '1'
+__author__ = ''
+__author_email__ = ''
+__license__ = 'GPL 2.0'
+__copyright__ = ''

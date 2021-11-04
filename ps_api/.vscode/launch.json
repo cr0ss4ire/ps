@@ -1,0 +1,31 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: app",
+            "type": "python",
+            "request": "launch",
+            "program": "C:\\Users\\cr0ss4ire\\Desktop\\spug-1.2.0\\spug_api\\libs\\pocstrike\\cli.py",
+            "console": "integratedTerminal",
+            "stopOnEntry": true,
+            "args": [
+                "-r",
+                "_2_drupal_rce.py",
+                "-u",
+                "http://192.168.2.245/",
+                "--attack"
+            ]
+        },
+
+        {
+            "name": "Python: web_api",
+            "type": "python",
+            "request": "launch",
+            "program": "C:\\Users\\cr0ss4ire\\Desktop\\spug-1.2.0\\spug_api\\main.py",
+            "console": "integratedTerminal"
+        }
+    ]
+}

