@@ -15,7 +15,7 @@
                 "-r",
                 "_2_drupal_rce.py",
                 "-u",
-                "http://192.168.2.245/",
+                "http://192.168.1.4/",
                 "--attack"
             ]
         },
@@ -24,7 +24,7 @@
             "name": "Python: web_api",
             "type": "python",
             "request": "launch",
-            "program": "C:\\Users\\cr0ss4ire\\Desktop\\spug-1.2.0\\spug_api\\main.py",
+            "program": "C:\\Users\\cr0ss4ire\\Desktop\\ps\\ps_api\\main.py",
             "console": "integratedTerminal"
         }
     ]

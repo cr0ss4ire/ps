@@ -42,7 +42,7 @@
             </el-col>
         </el-row>
         <el-row></el-row>
-        <el-table :data="plugins.data" highlight-current-row :row-key="getRowKeys" :expand-row-keys="expands" @expand-change="get_plugin_extend" v-loading="tableLoading" style="width: 100%; margin-top: 20px">
+        <el-table :data="plugins.data" highlight-current-row :row-key="get_row_keys" :expand-row-keys="expands" @expand-change="get_plugin_extend" v-loading="tableLoading" style="width: 100%; margin-top: 20px">
             <el-table-column type="expand">
                 <template slot-scope="props">
                     <el-form v-if="props.row.extend" label-position="left" inline class="demo-table-expand">
@@ -95,7 +95,7 @@
         </div>
 
         <el-dialog :visible.sync="dialogVisible" :title="title" v-if="dialogVisible" width="80%"  :close-on-click-modal="false">
-            <el-steps :active="active" process-status="process" finish-status="success">
+            <el-steps :active="create_task_form.active" process-status="process" finish-status="success">
                 <el-step title="任务" description="输入任务名称及描述">></el-step>
                 <el-step title="目标" description="输入目标url或上传目标文件"></el-step>
                 <el-step title="漏洞插件" description="选择漏洞插件">></el-step>
@@ -103,35 +103,38 @@
                 <el-step title="完成" description="任务配置完成"></el-step>
             </el-steps>
             <el-divider></el-divider>
-            <el-form :model="form" label-width="150px">
-                <div v-show="active == 0">
+            <el-form :model="create_task_form" ref="task" :rules="create_task_rules"  label-width="150px">
+                <div v-show="create_task_form.active == 0">
                     <el-form-item label="任务名称" prop="name" required>
-                        <el-input v-model="form.name" placeholder="任务名称"></el-input>
+                        <el-input v-model="create_task_form.name" placeholder="任务名称"></el-input>
                     </el-form-item>
                     <el-form-item label="任务描述" prop="desc" required>
-                        <el-input v-model="form.desc" placeholder="任务描述"></el-input>
+                        <el-input v-model="create_task_form.desc" placeholder="任务描述"></el-input>
                     </el-form-item>
                 </div>
-                <div v-show="active == 1">
+                <div v-show="create_task_form.active == 1">
                     <el-form-item label="目标格式" required>
-                        <el-radio v-model="radio" label="1">列表</el-radio>
-                        <el-radio v-model="radio" label="2">文件</el-radio>
+                        <el-radio-group v-model="create_task_form.radio" @change="url_format_change" >
+                            <el-radio  label="1">列表</el-radio>
+                            <el-radio  label="2">文件</el-radio>
+                        </el-radio-group>
                     </el-form-item>
-                    <el-form-item v-if="radio=='1'" label="目标列表" prop="url_list" required>
-                        <el-input v-model="form.url_list" type="textarea" :autosize="{ minRows: 5}" placeholder="http://127.0.0.1/
+                    <el-form-item v-if="create_task_form.radio=='1'"  ref="url_list" label="目标列表" prop="url_list" required>
+                        <el-input v-model="create_task_form.url_list" type="textarea" :autosize="{ minRows: 5}" placeholder="http://127.0.0.1/
 http://127.0.0.1:8080/
 http://192.168.1.2:8080/
                         "></el-input>
                     </el-form-item>
-                    <el-form-item v-if="radio=='2'" label="目标文件" prop="url_file" required>
-                        <el-upload class="upload-demo" drag action="" multiple>
+                    <el-form-item v-if="create_task_form.radio=='2'" ref="url_file" label="目标文件" prop="url_file" required>
+                        <el-upload class="upload-demo"  drag :file-list="create_task_form.file_list" list-type="text"  :before-upload="before_upload" :on-remove="on_remove" :limit="1"  action="" :multiple="false">
                             <i class="el-icon-upload"></i>
                             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                             <div class="el-upload__tip" slot="tip">只能上传txt文件，且不超过1M</div>
                         </el-upload>
+                        <el-input type="hidden" v-model="create_task_form.url_file" size="mini" placeholder=""></el-input>
                     </el-form-item>
                 </div>
-                <div v-show="active == 2">
+                <div v-show="create_task_form.active == 2">
                     <el-row>
                         <el-col :span="19">
                             <el-form :inline="true" :model="plugin_query">
@@ -173,8 +176,8 @@ http://192.168.1.2:8080/
                             <!--<el-button v-if="has_permission('exploit_plugin_add')" type="primary" icon="el-icon-plus" @click="handle_task_add">新建任务</el-button>-->
                         </el-col>
                     </el-row>
-                    <el-table ref="multipleTable" :data="plugins.data" highlight-current-row :row-key="getRowKeys" :expand-row-keys="expands" @expand-change="get_plugin_extend" v-loading="tableLoading" style="width: 100%; margin-top: 20px">
-                        <el-table-column type="selection">
+                    <el-table ref="multipleTable" :data="plugins.data" highlight-current-row :row-key="get_row_keys" :expand-row-keys="expands" @expand-change="get_plugin_extend" @selection-change="handle_selection_change" v-loading="tableLoading" style="width: 100%; margin-top: 20px">
+                        <el-table-column type="selection" reserve-selection>
                         </el-table-column>
                         <el-table-column type="expand">
                             <template slot-scope="props">
@@ -205,14 +208,14 @@ http://192.168.1.2:8080/
                         <el-table-column prop="application_name" label="应用名称"></el-table-column>
                         <el-table-column prop="category_name" label="应用归类"></el-table-column>
                         <el-table-column prop="author" label="提交者"></el-table-column>
-                        <el-table-column label="操作" width="270px" v-if="has_permission('assets_host_edit|assets_host_del|assets_host_valid')">
+                        <!--<el-table-column label="操作" width="270px" v-if="has_permission('assets_host_edit|assets_host_del|assets_host_valid')">
                             <template slot-scope="scope">
                                 <el-button v-if="has_permission('assets_host_edit')" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
                                 <el-button v-if="has_permission('assets_host_del')" size="small" icon="el-icon-delete" type="danger" @click="deleteCommit(scope.row)"
                                         :loading="btnDelLoading[scope.row.id]">删除
                                 </el-button>
                             </template>
-                        </el-table-column>
+                        </el-table-column>-->
                     </el-table>
 
                     <!--分页-->
@@ -224,18 +227,23 @@ http://192.168.1.2:8080/
                         </el-pagination>
                     </div>
                 </div>
-                <div v-show="active == 3">
+                <div v-show="create_task_form.active == 3">
+                    <el-form-item label="任务执行模式"  required>
+                        <el-select v-model="create_task_form.exec_model.exec_model_id" clearable placeholder="任务执行模式">
+                            <el-option v-for="item in exec_model_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item label="立刻执行任务"  required>
-                        <el-switch v-model="at_once" active-color="#13ce66"  active-text="启用" inactive-text="关闭"></el-switch>
+                        <el-switch v-model="create_task_form.at_once" active-color="#13ce66"  active-text="启用" inactive-text="关闭"></el-switch>
                     </el-form-item>
                 </div>
-                <div v-show="active == 4">
+                <div v-show="create_task_form.active == 4">
                     
                 </div>
             </el-form>
-            <el-button v-if="active > 0" type="primary" style="margin-top: 12px"  icon="el-icon-back" @click="pre">上一步</el-button>
-            <el-button v-if="active < 4" type="primary" style="margin-top: 12px" icon="el-icon-right" @click="next">下一步</el-button>
-            <el-button v-if="active >= 4" type="primary" @click="task_commit" :loading="btnSaveLoading">创建任务</el-button>
+            <el-button v-if="create_task_form.active > 0" type="primary" style="margin-top: 12px"  icon="el-icon-back" @click="pre">上一步</el-button>
+            <el-button v-if="create_task_form.active < 4" type="primary" style="margin-top: 12px" icon="el-icon-right" @click="next">下一步</el-button>
+            <el-button v-if="create_task_form.active >= 4" type="primary" @click="task_commit" :loading="btnSaveLoading">创建任务</el-button>
             
             <!--<div slot="footer">
                 <el-button @click="dialogVisible=false">取消</el-button>
@@ -265,9 +273,7 @@ http://192.168.1.2:8080/
     export default {
         data () {
             return {
-                active: 0,
-                radio:"1",
-                at_once:false,
+                
                 plugin_query: {
                     name: '',
                     vul_type_id: '',
@@ -281,7 +287,18 @@ http://192.168.1.2:8080/
                 btnDelLoading: {},
                 btnValidLoading: {},
                 tableLoading: true,
-                form: {},
+                create_task_form: {
+                    active: 0,
+                    at_once:false,
+                    radio:"1",
+                    url_list:"",
+                    url_file:"",
+                    file_list:[],
+                    plugin_list:[],
+                    exec_model:{
+                        exec_model_id:""
+                    }
+                },
                 plugins: {},
                 currentPage: 1,
                 vultype_options: [],
@@ -290,22 +307,114 @@ http://192.168.1.2:8080/
                 application_options: [],
                 category_options: [],
                 language_options: [],
-                expands: []
+                expands: [],
+                create_task_rules: {
+                    name: [
+                        { required: true, message: '任务名称不能为空', trigger: ['blur','change'] }
+                    ],
+                    desc: [
+                    { required: true, message: '任务描述不能为空', trigger: ['blur','change'] }
+                    ],
+                    url_list: [
+                    { required: true, message: '目标列表不能为空', trigger: ['blur','change'] }
+                    ],
+                    url_file: [
+                    { required: true, message: '请选择目标文件', trigger: ['change'] }
+                    ]
+                }
             }
         },
         methods: {
+            handle_selection_change(val) {
+            　　this.create_task_form.plugin_list = val;
+            　　console.log(this.plugin_list);
+            },
+            on_remove(file, fileList) {
+                this.create_task_form.url_file = "";
+                this.create_task_form.file_list=[];
+            },
+            before_upload(file){
+                let fd = new FormData();
+                fd.append('url_file',file);
+                this.$http.post("/api/task/file_upload",fd).then(
+                    res =>{
+                        this.create_task_form.url_file = file.name;
+                        this.create_task_form.file_list=res.result.file_list;
+                        this.$layer_message(res.result.status,"success");
+                    },
+                    res => this.$layer_message(res.result)
+                )
+                
+                return false
+            },
+            url_format_change(){
+                if(this.create_task_form.radio==1){
+                    this.$refs.url_list.resetField();
+                }
+                else if(this.create_task_form.radio==2){
+                    this.$refs.url_file.resetField();
+                }
+                
+            },
             next() {
-                if (this.active++ > 4)this.active = 5
-                },
+                let is_next = true;
+                if(this.create_task_form.active==0){
+                    this.$refs.task.validateField(["name","desc"],(errormsg)=>{
+                    if(!errormsg){
+                        is_next = is_next &&true;
+                    }
+                    else{
+                        is_next = is_next &&false;
+                    }
+                    });
+                }
+                if(this.create_task_form.active==1){
+                    if(this.create_task_form.radio==1){
+                        this.$refs.task.validateField(["url_list"],(errormsg)=>{
+                        if(!errormsg){
+                            is_next = is_next &&true;
+                        }
+                        else{
+                            is_next = is_next &&false;
+                        }
+                        });
+                    }
+                    else if(this.create_task_form.radio==2){
+                        this.$refs.task.validateField(["url_file"],(errormsg)=>{
+                        if(!errormsg){
+                            is_next = is_next &&true;
+                        }
+                        else{
+                            is_next = is_next &&false;
+                        }
+                        });
+                    }
+                    else{
+
+                    }
+                }
+
+                if(this.create_task_form.active==2){
+                    if(this.create_task_form.plugin_list.length==0){
+                        is_next = is_next &&false;
+                        this.$layer_message("请选择合适的漏洞插件");
+
+                    }
+                }
+                
+                if (is_next && this.create_task_form.active++ > 4){
+                    this.create_task_form.active = 5
+                } 
+            },
                 // 步骤条上一步的方法
             pre() {
-                if (this.active-- < 0) this.active = 0
+                if (this.create_task_form.active-- < 0) this.create_task_form.active = 0
                 },
              //刷新
             refresh(){
                 this.search(this.currentPage);
             },
-            getRowKeys(row) {
+            get_row_keys(row) {
                     return row.id;
             },
             handleCurrentChange(val) {

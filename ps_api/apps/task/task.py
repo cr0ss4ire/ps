@@ -1,9 +1,10 @@
-from flask import Blueprint, request, g
+from flask import Blueprint, request, g, url_for, send_from_directory
 import os
 import sys
 import threading
 import time
 import traceback
+import time
 from apps.exploit.models import Exploit, VulType, Category, Application, Level, Language, Effect
 from apps.account.models import User
 # from apps.configuration.models import ConfigKey, AppConfigRel, Environment
@@ -112,15 +113,15 @@ def start_task(task_id):
     return json_response()
 
 
-'''@blueprint.route('/plugins/<int:plugin_id>', methods=['GET'])
-@require_permission('exploit_view')
+@blueprint.route('/task/<int:task_id>', methods=['GET'])
+@require_permission('task_view')
 def get_plugin(plugin_id):
     query = Exploit.query.filter(Exploit.id == plugin_id)
     return json_response(query.first())
 
 
-@blueprint.route('/plugins', methods=['GET'])
-@require_permission('exploit_view')
+@blueprint.route('/index', methods=['GET'])
+@require_permission('task_view')
 def get():
     form, error = JsonParser(
         Argument('page', type=int, default=1, required=False),
@@ -181,7 +182,7 @@ def get():
     return json_response(message=error)
 
 
-@blueprint.route('/vultypes', methods=['GET'])
+'''@blueprint.route('/vultypes', methods=['GET'])
 @require_permission('exploit_view')
 def search_vultypes():
     query = VulType.query
@@ -232,10 +233,28 @@ def search_languages():
     query = Language.query
     languages = query.all()
     total = query.count()
-    return json_response({'data': [x.to_json() for x in languages], 'total': total})
+    return json_response({'data': [x.to_json() for x in languages], 'total': total})'''
 
 
-@blueprint.route('/plugins', methods=['POST'])
+@blueprint.route('/file_upload', methods=['POST'])
+@require_permission('task_view')
+def file_upload():
+    file = request.files['url_file']
+    if file.filename.rsplit('.', 1)[1].lower() == "txt":
+        try:
+            alise_name = str(int(time.time()))+"_"+file.filename
+            upload_path = "./upload/"+str(g.user.id)+"/"
+            if not os.path.exists(upload_path):
+                os.mkdir(upload_path)
+            file.save(os.path.join(upload_path, alise_name))
+            return json_response({"status": "上传成功", "file_list": [{"name": file.filename, "path": os.path.join(upload_path, alise_name)}]})
+        except Exception:
+            return json_response(message="上传失败")
+    else:
+        return json_response(message="只能上传txt文件")
+
+
+@blueprint.route('/index', methods=['POST'])
 @require_permission('exploit_add')
 def post():
     args = AttrDict(name=Argument('name', type=str, help='请输入漏洞插件名称!'),
@@ -304,11 +323,3 @@ def put(plugin_id):
         plugin.save()
         return json_response(plugin)
     return json_response(message=error)
-
-
-@blueprint.route('/receive', methods=['GET'])
-# @require_permission('publish_app_view')
-def fetch_groups():
-    # apps = db.session.query(App.group.distinct().label('group')).all()
-    print(123)
-    return json_response()'''

