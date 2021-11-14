@@ -138,3 +138,348 @@ KeyError: 'allow'
 [19:20:50] [+] webshell : http://192.168.1.4/hqbBWPHFIi.php
 [19:20:50] [+] pass : rebeyond
 [19:20:50] [INFO] Scan completed,ready to print
+[16:35:44] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[16:35:45] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[16:35:46] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[16:35:48] [INFO] pocstrike got a total of 4 tasks
+[16:35:49] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[16:36:10] [-] {http://192.168.2.245} target connect failed!
+[16:36:10] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[16:36:31] [-] {http://192.168.2.245:8080} target connect failed!
+[16:36:31] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[16:36:52] [-] {http://192.168.2.245} target connect failed!
+[16:36:52] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[16:37:07] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[16:37:07] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[16:37:07] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[16:37:07] [INFO] pocstrike got a total of 4 tasks
+[16:37:07] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[16:37:14] [-] {http://192.168.2.245:8080} target connect failed!
+[16:37:14] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[16:37:38] [-] {http://192.168.2.245:8080} target connect failed!
+[16:37:38] [-] {http://192.168.2.245} target connect failed!
+[16:37:38] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[16:37:38] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[16:37:59] [-] {http://192.168.2.245:8080} target connect failed!
+[16:37:59] [INFO] Scan completed,ready to print
+[16:37:59] [-] {http://192.168.2.245} target connect failed!
+[16:37:59] [INFO] Scan completed,ready to print
+[16:38:01] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[16:38:01] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[16:38:01] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[16:38:01] [INFO] pocstrike got a total of 4 tasks
+[16:38:01] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[16:38:22] [-] {http://192.168.2.245} target connect failed!
+[16:38:22] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[16:38:43] [-] {http://192.168.2.245:8080} target connect failed!
+[16:38:43] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[16:39:04] [-] {http://192.168.2.245} target connect failed!
+[16:39:04] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[16:39:24] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[16:39:24] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[16:39:24] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[16:39:24] [INFO] pocstrike got a total of 4 tasks
+[16:39:24] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[16:39:25] [-] {http://192.168.2.245:8080} target connect failed!
+[16:39:25] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[16:39:45] [-] {http://192.168.2.245} target connect failed!
+[16:39:45] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[16:39:46] [-] {http://192.168.2.245:8080} target connect failed!
+[16:39:46] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[16:39:59] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[16:39:59] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[16:39:59] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[16:39:59] [INFO] pocstrike got a total of 4 tasks
+[16:39:59] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[16:40:06] [-] {http://192.168.2.245} target connect failed!
+[16:40:06] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[16:40:07] [-] {http://192.168.2.245:8080} target connect failed!
+[16:40:07] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[16:40:20] [-] {http://192.168.2.245} target connect failed!
+[16:40:20] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[16:40:27] [-] {http://192.168.2.245:8080} target connect failed!
+[16:40:27] [INFO] Scan completed,ready to print
+[16:40:28] [-] {http://192.168.2.245} target connect failed!
+[16:40:28] [INFO] Scan completed,ready to print
+[16:40:41] [-] {http://192.168.2.245:8080} target connect failed!
+[16:40:41] [INFO] Scan completed,ready to print
+[16:44:06] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[16:44:06] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[16:44:06] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[16:44:06] [INFO] pocstrike got a total of 4 tasks
+[16:44:06] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[16:44:27] [-] {http://192.168.2.245} target connect failed!
+[16:44:27] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[16:44:48] [-] {http://192.168.2.245:8080} target connect failed!
+[16:44:48] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[16:45:09] [-] {http://192.168.2.245} target connect failed!
+[16:45:09] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[16:45:30] [-] {http://192.168.2.245:8080} target connect failed!
+[16:45:30] [INFO] Scan completed,ready to print
+[16:47:27] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[16:47:27] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[16:47:27] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[16:47:27] [INFO] pocstrike got a total of 4 tasks
+[16:47:27] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[16:47:48] [-] {http://192.168.2.245} target connect failed!
+[16:47:48] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[16:48:09] [-] {http://192.168.2.245:8080} target connect failed!
+[16:48:09] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[16:48:12] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[16:48:12] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[16:48:12] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[16:48:12] [INFO] pocstrike got a total of 4 tasks
+[16:48:12] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[16:48:30] [-] {http://192.168.2.245} target connect failed!
+[16:48:30] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[16:48:33] [-] {http://192.168.2.245} target connect failed!
+[16:48:33] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[16:48:51] [-] {http://192.168.2.245:8080} target connect failed!
+[16:48:51] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[16:48:54] [-] {http://192.168.2.245} target connect failed!
+[16:48:54] [INFO] Scan completed,ready to print
+[16:49:12] [-] {http://192.168.2.245:8080} target connect failed!
+[16:49:12] [INFO] Scan completed,ready to print
+[17:09:46] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[17:09:46] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[17:09:46] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[17:09:47] [INFO] pocstrike got a total of 4 tasks
+[17:09:47] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[17:10:08] [-] {http://192.168.2.245} target connect failed!
+[17:10:08] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[17:10:29] [-] {http://192.168.2.245:8080} target connect failed!
+[17:10:29] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[17:10:50] [-] {http://192.168.2.245} target connect failed!
+[17:10:50] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[17:11:11] [-] {http://192.168.2.245:8080} target connect failed!
+[17:11:11] [INFO] Scan completed,ready to print
+[17:14:41] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[17:14:41] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[17:14:41] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[17:14:41] [INFO] pocstrike got a total of 4 tasks
+[17:14:41] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[17:15:02] [-] {http://192.168.2.245} target connect failed!
+[17:15:02] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[17:15:23] [-] {http://192.168.2.245:8080} target connect failed!
+[17:15:23] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[17:15:44] [-] {http://192.168.2.245} target connect failed!
+[17:15:44] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[17:16:05] [-] {http://192.168.2.245:8080} target connect failed!
+[17:16:05] [INFO] Scan completed,ready to print
+[17:20:00] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[17:20:00] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[17:20:00] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[17:20:00] [INFO] pocstrike got a total of 4 tasks
+[17:20:00] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[17:20:21] [-] {http://192.168.2.245} target connect failed!
+[17:20:21] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[17:20:42] [-] {http://192.168.2.245:8080} target connect failed!
+[17:20:42] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[17:21:03] [-] {http://192.168.2.245} target connect failed!
+[17:21:03] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[17:21:24] [-] {http://192.168.2.245:8080} target connect failed!
+[17:21:24] [INFO] Scan completed,ready to print
+[17:23:24] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[17:23:24] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[17:23:26] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[17:23:26] [INFO] pocstrike got a total of 4 tasks
+[17:23:26] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[17:23:48] [-] {http://192.168.2.245} target connect failed!
+[17:23:48] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[17:24:09] [-] {http://192.168.2.245:8080} target connect failed!
+[17:24:09] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[17:24:30] [-] {http://192.168.2.245} target connect failed!
+[17:24:30] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[17:24:51] [-] {http://192.168.2.245:8080} target connect failed!
+[17:24:51] [INFO] Scan completed,ready to print
+[17:30:52] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[17:30:52] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[17:30:52] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[17:30:52] [INFO] pocstrike got a total of 4 tasks
+[17:30:52] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[17:31:14] [-] {http://192.168.2.245} target connect failed!
+[17:31:14] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[17:31:35] [-] {http://192.168.2.245:8080} target connect failed!
+[17:31:35] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[17:31:56] [-] {http://192.168.2.245} target connect failed!
+[17:31:56] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[17:32:17] [-] {http://192.168.2.245:8080} target connect failed!
+[17:32:17] [INFO] Scan completed,ready to print
+[17:38:40] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[17:38:41] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[17:38:41] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[17:38:41] [INFO] pocstrike got a total of 4 tasks
+[17:38:41] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[17:39:03] [-] {http://192.168.2.245} target connect failed!
+[17:39:03] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[17:39:24] [-] {http://192.168.2.245:8080} target connect failed!
+[17:39:24] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[17:39:45] [-] {http://192.168.2.245} target connect failed!
+[17:39:45] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[17:40:06] [-] {http://192.168.2.245:8080} target connect failed!
+[17:40:06] [INFO] Scan completed,ready to print
+[17:44:10] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[17:44:10] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[17:44:11] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[17:44:11] [INFO] pocstrike got a total of 4 tasks
+[17:44:11] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[17:44:32] [-] {http://192.168.2.245} target connect failed!
+[17:44:32] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[17:44:53] [-] {http://192.168.2.245:8080} target connect failed!
+[17:44:53] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[17:45:14] [-] {http://192.168.2.245} target connect failed!
+[17:45:14] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[17:45:35] [-] {http://192.168.2.245:8080} target connect failed!
+[17:45:35] [INFO] Scan completed,ready to print
+[18:14:54] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[18:14:54] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[18:14:57] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[18:14:57] [INFO] pocstrike got a total of 4 tasks
+[18:14:57] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[18:15:18] [-] {http://192.168.2.245:8080} target connect failed!
+[18:15:18] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[18:15:39] [-] {http://192.168.2.245} target connect failed!
+[18:15:39] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[18:16:01] [-] {http://192.168.2.245:8080} target connect failed!
+[18:16:01] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[18:16:22] [-] {http://192.168.2.245} target connect failed!
+[18:16:22] [INFO] Scan completed,ready to print
+[09:52:50] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[09:52:50] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[09:52:51] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[09:52:51] [INFO] pocstrike got a total of 4 tasks
+[09:52:51] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[09:53:12] [-] {http://192.168.2.245:8080} target connect failed!
+[09:53:12] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[09:53:33] [-] {http://192.168.2.245} target connect failed!
+[09:53:33] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[09:53:54] [-] {http://192.168.2.245:8080} target connect failed!
+[09:53:54] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[09:54:15] [-] {http://192.168.2.245} target connect failed!
+[09:54:15] [INFO] Scan completed,ready to print
+[10:23:57] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[10:23:57] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[10:23:57] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[10:23:57] [INFO] pocstrike got a total of 4 tasks
+[10:23:57] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[10:23:58] [-] {http://192.168.2.245:8080} target connect failed!
+[10:23:58] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[10:23:58] [-] {http://192.168.2.245} target connect failed!
+[10:23:58] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[10:23:58] [-] {http://192.168.2.245:8080} target connect failed!
+[10:23:58] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[10:23:58] [-] {http://192.168.2.245} target connect failed!
+[10:23:58] [INFO] Scan completed,ready to print
+[11:15:50] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[11:15:50] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[11:15:50] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[11:15:50] [INFO] pocstrike got a total of 4 tasks
+[11:15:50] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[11:16:11] [-] {http://192.168.2.245:8080} target connect failed!
+[11:16:11] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[11:16:32] [-] {http://192.168.2.245} target connect failed!
+[11:16:32] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[11:16:53] [-] {http://192.168.2.245:8080} target connect failed!
+[11:16:53] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[11:17:14] [-] {http://192.168.2.245} target connect failed!
+[11:17:14] [INFO] Scan completed,ready to print
+[11:20:27] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[11:20:27] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[11:20:27] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[11:20:27] [INFO] pocstrike got a total of 4 tasks
+[11:20:27] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[11:20:49] [-] {http://192.168.2.245:8080} target connect failed!
+[11:20:49] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[11:21:10] [-] {http://192.168.2.245} target connect failed!
+[11:21:10] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[14:07:15] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[14:07:15] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[14:07:15] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[14:07:15] [INFO] pocstrike got a total of 4 tasks
+[14:07:15] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[14:07:37] [-] {http://192.168.2.245:8080} target connect failed!
+[14:07:37] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[14:07:58] [-] {http://192.168.2.245} target connect failed!
+[14:07:58] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[14:08:19] [-] {http://192.168.2.245:8080} target connect failed!
+[14:08:19] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[14:08:40] [-] {http://192.168.2.245} target connect failed!
+[14:08:40] [INFO] Scan completed,ready to print
+[14:10:46] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[14:10:46] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[14:10:47] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[14:10:47] [INFO] pocstrike got a total of 4 tasks
+[14:10:47] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[14:11:08] [-] {http://192.168.2.245:8080} target connect failed!
+[14:11:08] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[14:11:29] [-] {http://192.168.2.245} target connect failed!
+[14:11:29] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[14:11:50] [-] {http://192.168.2.245:8080} target connect failed!
+[14:11:50] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[14:12:11] [-] {http://192.168.2.245} target connect failed!
+[14:12:11] [INFO] Scan completed,ready to print
+[14:24:52] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[14:24:52] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[14:24:52] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[14:24:52] [INFO] pocstrike got a total of 4 tasks
+[14:24:52] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[14:25:13] [-] {http://192.168.2.245:8080} target connect failed!
+[14:25:13] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[14:25:34] [-] {http://192.168.2.245} target connect failed!
+[14:25:34] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[14:25:55] [-] {http://192.168.2.245:8080} target connect failed!
+[14:25:55] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[14:26:16] [-] {http://192.168.2.245} target connect failed!
+[14:26:16] [INFO] Scan completed,ready to print
+[14:43:07] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[14:43:07] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[14:43:07] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[14:43:07] [INFO] pocstrike got a total of 4 tasks
+[14:43:07] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[14:43:28] [-] {http://192.168.2.245:8080} target connect failed!
+[14:43:28] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[14:43:49] [-] {http://192.168.2.245} target connect failed!
+[14:43:49] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[14:44:10] [-] {http://192.168.2.245:8080} target connect failed!
+[14:44:10] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[14:44:31] [-] {http://192.168.2.245} target connect failed!
+[14:44:31] [INFO] Scan completed,ready to print
+[14:58:13] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[14:58:13] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[14:58:13] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[14:58:13] [INFO] pocstrike got a total of 4 tasks
+[14:58:13] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[14:58:34] [-] {http://192.168.2.245:8080} target connect failed!
+[14:58:34] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[14:58:55] [-] {http://192.168.2.245} target connect failed!
+[14:58:55] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[14:59:16] [-] {http://192.168.2.245:8080} target connect failed!
+[14:59:16] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[14:59:37] [-] {http://192.168.2.245} target connect failed!
+[14:59:37] [INFO] Scan completed,ready to print
+[17:05:15] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[17:05:15] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[17:05:16] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[17:05:16] [INFO] pocstrike got a total of 4 tasks
+[17:05:16] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[17:05:37] [-] {http://192.168.2.245} target connect failed!
+[17:05:37] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[17:05:58] [-] {http://192.168.2.245:8080} target connect failed!
+[17:05:58] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[17:06:19] [-] {http://192.168.2.245} target connect failed!
+[17:06:19] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[17:06:40] [-] {http://192.168.2.245:8080} target connect failed!
+[17:06:40] [INFO] Scan completed,ready to print
+[17:21:19] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[17:21:19] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[17:21:19] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[17:21:19] [INFO] pocstrike got a total of 4 tasks
+[17:21:19] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245'
+[17:21:40] [-] {http://192.168.2.245} target connect failed!
+[17:21:40] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.245:8080'
+[17:22:01] [-] {http://192.168.2.245:8080} target connect failed!
+[17:22:01] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
+[17:22:22] [-] {http://192.168.2.245} target connect failed!
+[17:22:22] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245:8080'
+[17:22:43] [-] {http://192.168.2.245:8080} target connect failed!
+[17:22:43] [INFO] Scan completed,ready to print

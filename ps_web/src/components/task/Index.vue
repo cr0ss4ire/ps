@@ -2,99 +2,69 @@
     <div>
         <el-row>
             <el-col :span="19">
-                <el-form :inline="true" :model="plugin_query">
+                <el-form :inline="true" :model="task_query">
                     <el-form-item>
-                        <el-input v-model="plugin_query.name" clearable placeholder="任务名称"></el-input>
+                        <el-input v-model="task_query.name" clearable placeholder="任务名称"></el-input>
                     </el-form-item>
-                    <!--<el-form-item style="width:12%">
-                    <el-select v-model="plugin_query.vul_type_id" @change="search_by_vultype()" clearable placeholder="漏洞类型">
-                        <el-option v-for="item in vultype_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                    <el-form-item style="width:12%">
+                    <el-select v-model="task_query.task_status" @change="task_search_by_status()" clearable placeholder="运行状态">
+                        <el-option v-for="item in task_query.status_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
                     </el-select>
                     </el-form-item>
                     <el-form-item style="width:12%">
-                    <el-select v-model="plugin_query.level_id" @change="search_by_level()" clearable placeholder="危害等级">
-                        <el-option v-for="item in level_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
-                    </el-select>
-                    </el-form-item>
-                    <el-form-item style="width:12%">
-                    <el-select v-model="plugin_query.effect_id" @change="search_by_effect()" clearable placeholder="利用效果">
-                        <el-option v-for="item in effect_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
-                    </el-select>
-                    </el-form-item>
-                    <el-form-item style="width:12%">
-                    <el-select v-model="plugin_query.application_id" @change="search_by_application()" clearable placeholder="应用名称">
-                        <el-option v-for="item in application_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
-                    </el-select>
-                    </el-form-item>
-                    <el-form-item style="width:12%"> 
-                    <el-select v-model="plugin_query.category_id" @change="search_by_category()" clearable placeholder="应用归类">
-                        <el-option v-for="item in category_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
-                    </el-select>
-                    </el-form-item>-->
-                    <el-form-item style="width:12%">
-                        <el-button type="primary" icon="el-icon-search" @click="search()">查询</el-button>
+                        <el-button type="primary" icon="el-icon-search" @click="task_search()">查询</el-button>
                     </el-form-item>
                 </el-form>
             </el-col>
             <el-col :span="5"  style="text-align: right">
-                <el-button  icon="el-icon-refresh" @click="refresh()">刷新</el-button>
+                <el-button  icon="el-icon-refresh" @click="task_refresh()">刷新</el-button>
                 <el-button v-if="has_permission('exploit_plugin_add')" type="primary" icon="el-icon-plus" @click="handle_task_add">新建任务</el-button>
             </el-col>
         </el-row>
         <el-row></el-row>
-        <el-table :data="plugins.data" highlight-current-row :row-key="get_row_keys" :expand-row-keys="expands" @expand-change="get_plugin_extend" v-loading="tableLoading" style="width: 100%; margin-top: 20px">
-            <el-table-column type="expand">
-                <template slot-scope="props">
-                    <el-form v-if="props.row.extend" label-position="left" inline class="demo-table-expand">
-                        <el-form-item label="目标版本:"><span>{{ props.row.extend.affect_version }}</span></el-form-item>
-                        <el-form-item label=""><span></span></el-form-item>
-                        <el-form-item label="目标语言:"><span>{{ props.row.extend.language_name }}</span></el-form-item>
-                        <el-form-item label=""><span></span></el-form-item>
-                        <el-form-item label="目标系统:"><span>{{ props.row.extend.os }}</span></el-form-item>
-                        <el-form-item label=""><span></span></el-form-item>
-                        <el-form-item label="提交时间:"><span>{{ props.row.extend.enter_time }}</span></el-form-item>
-                        <el-form-item label=""><span></span></el-form-item>
-                        <el-form-item label="更新时间:"><span>{{ props.row.extend.update_time }}</span></el-form-item>
-                        <el-form-item label=""><span></span></el-form-item>
-                        <el-form-item label="漏洞描述:"><span>{{ props.row.extend.desc }}</span></el-form-item>
-                    </el-form>
-                   <!-- <el-row v-else style="text-align: center">
-                        <span style="color: #99a9bf">暂没有额外信息</span>
-                    </el-row>-->
+        <el-table :data="task_query.tasks.data" highlight-current-row :row-key="get_row_keys" v-loading="task_query.table_loading" style="width: 100%; margin-top: 20px">
+            <el-table-column prop="name" label="任务名称"></el-table-column>
+            <el-table-column prop="status" label="运行状态">
+                <template slot-scope="scope">
+                    <div v-if="scope.row.status==0">
+                        未开始
+                    </div>
+                    <div v-if="scope.row.status==1">
+                        执行中
+                    </div>
+                    <div v-if="scope.row.status==2">
+                        已完成
+                    </div>
                 </template>
             </el-table-column>
-
-            <el-table-column prop="exploit_name" label="漏洞名称"></el-table-column>
-            <el-table-column prop="cve" label="漏洞编号"></el-table-column>
-            <el-table-column prop="vultype_name" label="漏洞类型"></el-table-column>
-            <el-table-column prop="level_name" label="危害等级"></el-table-column>
-            <el-table-column prop="effect_name" label="利用效果"></el-table-column>
-            <el-table-column prop="application_name" label="应用名称"></el-table-column>
-            <el-table-column prop="category_name" label="应用归类"></el-table-column>
-            <el-table-column prop="author" label="提交者"></el-table-column>
-            <el-table-column label="操作" width="270px" v-if="has_permission('assets_host_edit|assets_host_del|assets_host_valid')">
+            <el-table-column prop="create_time" label="创建时间"></el-table-column>
+            <el-table-column prop="update_time" label="更新时间"></el-table-column>
+            <el-table-column prop="start_time" label="执行时间"></el-table-column>
+            <el-table-column prop="finish_time" label="结束时间"></el-table-column>
+            <el-table-column prop="author" label="创建者"></el-table-column>
+            <el-table-column label="操作" align="center" width="360px" v-if="has_permission('assets_host_edit|assets_host_del|assets_host_valid')">
                 <template slot-scope="scope">
-                    <el-button v-if="has_permission('assets_host_edit')" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
-                    <el-button v-if="has_permission('assets_host_valid')" size="small" type="primary" @click="valid(scope.row)"
-                               :loading="btnValidLoading[scope.row.id]">验证
-                    </el-button>
-                    <el-button v-if="has_permission('assets_host_del')" size="small" icon="el-icon-delete" type="danger" @click="deleteCommit(scope.row)"
-                               :loading="btnDelLoading[scope.row.id]">删除
+                    <el-button v-if="has_permission('assets_host_edit') && scope.row.status==0" size="small" icon="el-icon-video-play" @click="task_start(scope.row)">启动</el-button>
+                    <el-button v-if="has_permission('assets_host_edit') && scope.row.status==1" size="small" icon="el-icon-circle-close" @click="task_stop(scope.row)">终止</el-button>
+                    <el-button v-if="has_permission('assets_host_edit') && scope.row.status!=0" size="small" icon="el-icon-monitor" @click="task_detail(scope.row)">任务详情</el-button>
+                    <el-button v-if="has_permission('assets_host_edit') && scope.row.status==0" size="small" icon="el-icon-edit" @click="task_edit(scope.row)">编辑</el-button>
+                    
+                    <el-button v-if="has_permission('assets_host_del') && scope.row.status!=1" size="small" icon="el-icon-delete" type="danger" @click="task_delete(scope.row)"
+                               :loading="task_query.btn_del_loading">删除
                     </el-button>
                 </template>
             </el-table-column>
         </el-table>
 
-        <!--分页-->
-        <div class="pagination-bar" v-if="plugins.total > 10">
+        <div class="pagination-bar" v-if="task_query.tasks.total > 10">
             <el-pagination
-                    @current-change="handleCurrentChange"
-                    :current-page="currentPage"  layout="total, prev, pager, next"
-                    :total="plugins.total">
+                    @current-change="handle_task_current_change"
+                    :current-page="task_query.current_task_page"  layout="total, prev, pager, next"
+                    :total=" task_query.tasks.total">
             </el-pagination>
         </div>
-
-        <el-dialog :visible.sync="dialogVisible" :title="title" v-if="dialogVisible" width="80%"  :close-on-click-modal="false">
+        
+        <el-dialog :visible.sync="dialog_visible" :title="title" v-if="dialog_visible" width="80%"  :close-on-click-modal="false">
             <el-steps :active="create_task_form.active" process-status="process" finish-status="success">
                 <el-step title="任务" description="输入任务名称及描述">></el-step>
                 <el-step title="目标" description="输入目标url或上传目标文件"></el-step>
@@ -114,24 +84,23 @@
                 </div>
                 <div v-show="create_task_form.active == 1">
                     <el-form-item label="目标格式" required>
-                        <el-radio-group v-model="create_task_form.radio" @change="url_format_change" >
+                        <el-radio-group v-model="create_task_form.radio" @change="task_url_format_change" >
                             <el-radio  label="1">列表</el-radio>
                             <el-radio  label="2">文件</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item v-if="create_task_form.radio=='1'"  ref="url_list" label="目标列表" prop="url_list" required>
+                    <el-form-item v-show="create_task_form.radio=='1'"  ref="url_list" label="目标列表" prop="url_list" required>
                         <el-input v-model="create_task_form.url_list" type="textarea" :autosize="{ minRows: 5}" placeholder="http://127.0.0.1/
 http://127.0.0.1:8080/
 http://192.168.1.2:8080/
                         "></el-input>
                     </el-form-item>
-                    <el-form-item v-if="create_task_form.radio=='2'" ref="url_file" label="目标文件" prop="url_file" required>
-                        <el-upload class="upload-demo"  drag :file-list="create_task_form.file_list" list-type="text"  :before-upload="before_upload" :on-remove="on_remove" :limit="1"  action="" :multiple="false">
+                    <el-form-item v-show="create_task_form.radio=='2'"  label="目标文件"  required>
+                        <el-upload class="upload-demo"   drag :file-list="create_task_form.file_list" list-type="text"  :before-upload="task_file_before_upload" :on-remove="task_file_on_remove" :limit="1"  action="" :multiple="false">
                             <i class="el-icon-upload"></i>
                             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                             <div class="el-upload__tip" slot="tip">只能上传txt文件，且不超过1M</div>
                         </el-upload>
-                        <el-input type="hidden" v-model="create_task_form.url_file" size="mini" placeholder=""></el-input>
                     </el-form-item>
                 </div>
                 <div v-show="create_task_form.active == 2">
@@ -142,41 +111,40 @@ http://192.168.1.2:8080/
                                     <el-input v-model="plugin_query.name" clearable placeholder="漏洞插件名称"></el-input>
                                 </el-form-item>
                                 <el-form-item style="width:10%">
-                                <el-select v-model="plugin_query.vul_type_id" @change="search_by_vultype()" clearable placeholder="漏洞类型">
-                                    <el-option v-for="item in vultype_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                                <el-select v-model="plugin_query.vul_type_id" @change="plugin_search_by_vultype()" clearable placeholder="漏洞类型">
+                                    <el-option v-for="item in plugin_query.vultype_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
                                 </el-select>
                                 </el-form-item>
                                 <el-form-item style="width:10%">
-                                <el-select v-model="plugin_query.level_id" @change="search_by_level()" clearable placeholder="危害等级">
-                                    <el-option v-for="item in level_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                                <el-select v-model="plugin_query.level_id" @change="plugin_search_by_level()" clearable placeholder="危害等级">
+                                    <el-option v-for="item in plugin_query.level_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
                                 </el-select>
                                 </el-form-item>
                                 <el-form-item style="width:10%">
-                                <el-select v-model="plugin_query.effect_id" @change="search_by_effect()" clearable placeholder="利用效果">
-                                    <el-option v-for="item in effect_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                                <el-select v-model="plugin_query.effect_id" @change="plugin_search_by_effect()" clearable placeholder="利用效果">
+                                    <el-option v-for="item in plugin_query.effect_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
                                 </el-select>
                                 </el-form-item>
                                 <el-form-item style="width:10%">
-                                <el-select v-model="plugin_query.application_id" @change="search_by_application()" clearable placeholder="应用名称">
-                                    <el-option v-for="item in application_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                                <el-select v-model="plugin_query.application_id" @change="plugin_search_by_application()" clearable placeholder="应用名称">
+                                    <el-option v-for="item in plugin_query.application_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
                                 </el-select>
                                 </el-form-item>
                                 <el-form-item style="width:10%"> 
-                                <el-select v-model="plugin_query.category_id" @change="search_by_category()" clearable placeholder="应用归类">
-                                    <el-option v-for="item in category_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                                <el-select v-model="plugin_query.category_id" @change="plugin_search_by_category()" clearable placeholder="应用归类">
+                                    <el-option v-for="item in plugin_query.category_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
                                 </el-select>
                                 </el-form-item>
                                 <el-form-item style="width:10%">
-                                    <el-button type="primary" icon="el-icon-search" @click="search()">查询</el-button>
+                                    <el-button type="primary" icon="el-icon-search" @click="plugin_search()">查询</el-button>
                                 </el-form-item>
                             </el-form>
                         </el-col>
                         <el-col :span="5"  style="text-align: right">
-                            <el-button  icon="el-icon-refresh" @click="refresh()">刷新</el-button>
-                            <!--<el-button v-if="has_permission('exploit_plugin_add')" type="primary" icon="el-icon-plus" @click="handle_task_add">新建任务</el-button>-->
+                            <el-button  icon="el-icon-refresh" @click="plugin_refresh()">刷新</el-button>
                         </el-col>
                     </el-row>
-                    <el-table ref="multipleTable" :data="plugins.data" highlight-current-row :row-key="get_row_keys" :expand-row-keys="expands" @expand-change="get_plugin_extend" @selection-change="handle_selection_change" v-loading="tableLoading" style="width: 100%; margin-top: 20px">
+                    <el-table ref="plugin_tables" :data="plugin_query.plugins.data" highlight-current-row :row-key="get_row_keys" :expand-row-keys="plugin_query.expands" @expand-change="get_plugin_extend" @selection-change="handle_task_plugin_selection_change" v-loading="plugin_query.table_loading" style="width: 100%; margin-top: 20px">
                         <el-table-column type="selection" reserve-selection>
                         </el-table-column>
                         <el-table-column type="expand">
@@ -194,9 +162,6 @@ http://192.168.1.2:8080/
                                     <el-form-item label=""><span></span></el-form-item>
                                     <el-form-item label="漏洞描述:"><span>{{ props.row.extend.desc }}</span></el-form-item>
                                 </el-form>
-                            <!-- <el-row v-else style="text-align: center">
-                                    <span style="color: #99a9bf">暂没有额外信息</span>
-                                </el-row>-->
                             </template>
                         </el-table-column>
 
@@ -208,29 +173,19 @@ http://192.168.1.2:8080/
                         <el-table-column prop="application_name" label="应用名称"></el-table-column>
                         <el-table-column prop="category_name" label="应用归类"></el-table-column>
                         <el-table-column prop="author" label="提交者"></el-table-column>
-                        <!--<el-table-column label="操作" width="270px" v-if="has_permission('assets_host_edit|assets_host_del|assets_host_valid')">
-                            <template slot-scope="scope">
-                                <el-button v-if="has_permission('assets_host_edit')" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
-                                <el-button v-if="has_permission('assets_host_del')" size="small" icon="el-icon-delete" type="danger" @click="deleteCommit(scope.row)"
-                                        :loading="btnDelLoading[scope.row.id]">删除
-                                </el-button>
-                            </template>
-                        </el-table-column>-->
                     </el-table>
-
-                    <!--分页-->
-                    <div class="pagination-bar" v-if="plugins.total > 10">
+                    <div class="pagination-bar" v-if="plugin_query.plugins.total > 10">
                         <el-pagination
-                                @current-change="handleCurrentChange"
-                                :current-page="currentPage"  layout="total, prev, pager, next"
-                                :total="plugins.total">
+                                @current-change="handle_plugin_current_change"
+                                :current-page="plugin_query.current_plugin_page"  layout="total, prev, pager, next"
+                                :total="plugin_query.plugins.total">
                         </el-pagination>
                     </div>
                 </div>
                 <div v-show="create_task_form.active == 3">
                     <el-form-item label="任务执行模式"  required>
-                        <el-select v-model="create_task_form.exec_model.exec_model_id" clearable placeholder="任务执行模式">
-                            <el-option v-for="item in exec_model_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                        <el-select v-model="create_task_form.exec_model.exec_model_id"  placeholder="任务执行模式">
+                            <el-option v-for="item in create_task_form.exec_model.exec_model_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="立刻执行任务"  required>
@@ -243,12 +198,8 @@ http://192.168.1.2:8080/
             </el-form>
             <el-button v-if="create_task_form.active > 0" type="primary" style="margin-top: 12px"  icon="el-icon-back" @click="pre">上一步</el-button>
             <el-button v-if="create_task_form.active < 4" type="primary" style="margin-top: 12px" icon="el-icon-right" @click="next">下一步</el-button>
-            <el-button v-if="create_task_form.active >= 4" type="primary" @click="task_commit" :loading="btnSaveLoading">创建任务</el-button>
-            
-            <!--<div slot="footer">
-                <el-button @click="dialogVisible=false">取消</el-button>
-                <el-button type="primary" @click="task_commit" :loading="btnSaveLoading">创建</el-button>
-            </div>-->
+            <el-button v-if="create_task_form.active >= 4" type="primary" @click="task_commit" :loading="create_task_form.btnSaveLoading">提交</el-button>
+
         </el-dialog>
     </div>
 </template>
@@ -273,22 +224,43 @@ http://192.168.1.2:8080/
     export default {
         data () {
             return {
-                
+                task_query:{
+                    name:"",
+                    task_status:"",
+                    btn_del_loading: false,
+                    table_loading:false,
+                    current_task_page: 1,
+                    tasks:{},
+                    status_options:[
+                        {"id":0,"name":"未开始"},
+                        {"id":1,"name":"运行中"},
+                        {"id":2,"name":"已完成"}
+                    ]
+
+                },
                 plugin_query: {
                     name: '',
                     vul_type_id: '',
                     level_id: '',
                     effect_id: '',
                     application_id: '',
-                    category_id: ''
+                    category_id: '',
+                    current_plugin_page: 1,
+                    plugins: {},
+                    vultype_options: [],
+                    level_options: [],
+                    effect_options: [],
+                    application_options: [],
+                    category_options: [],
+                    language_options: [],
+                    expands: [],
+                    table_loading: false
                 },
-                dialogVisible: false,
-                btnSaveLoading: false,
-                btnDelLoading: {},
-                btnValidLoading: {},
-                tableLoading: true,
+                dialog_visible: false,
                 create_task_form: {
+                    name:"",
                     active: 0,
+                    desc:"",
                     at_once:false,
                     radio:"1",
                     url_list:"",
@@ -296,18 +268,11 @@ http://192.168.1.2:8080/
                     file_list:[],
                     plugin_list:[],
                     exec_model:{
-                        exec_model_id:""
-                    }
+                        exec_model_id:1,
+                        exec_model_options:[]
+                    },
+                    btnSaveLoading: false
                 },
-                plugins: {},
-                currentPage: 1,
-                vultype_options: [],
-                level_options: [],
-                effect_options: [],
-                application_options: [],
-                category_options: [],
-                language_options: [],
-                expands: [],
                 create_task_rules: {
                     name: [
                         { required: true, message: '任务名称不能为空', trigger: ['blur','change'] }
@@ -316,24 +281,42 @@ http://192.168.1.2:8080/
                     { required: true, message: '任务描述不能为空', trigger: ['blur','change'] }
                     ],
                     url_list: [
-                    { required: true, message: '目标列表不能为空', trigger: ['blur','change'] }
-                    ],
-                    url_file: [
-                    { required: true, message: '请选择目标文件', trigger: ['change'] }
+                    { required: true, message: '目标列表不能为空', trigger: ['blur','change'] },
+                    { pattern: /^((?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+(\n)?)+$/, message: '请输入正确的目标列表', trigger: ['blur','change'] }
                     ]
                 }
             }
         },
         methods: {
-            handle_selection_change(val) {
-            　　this.create_task_form.plugin_list = val;
-            　　console.log(this.plugin_list);
+            task_search_by_status(){
+                this.task_query.current_task_page = 1;
+                this.task_search();
             },
-            on_remove(file, fileList) {
+            handle_task_current_change(val) {
+                this.task_query.current_task_page = val;
+                this.task_search(this.task_query.current_task_page);
+            },
+            task_search(page){
+                if (!page) this.task_query.current_task_page = 1;
+                let form={
+                    task_status:"",
+                    name:""
+                }
+                form.task_status=this.task_query.task_status;
+                form.name=this.task_query.name;
+                this.task_query.table_loading = true;
+                this.$http.get('/api/task/index', {params: {page: this.task_query.current_task_page, task_query: form}}).then(res => {
+                    this.task_query.tasks = res.result
+                }, res => this.$layer_message(res.result)).finally(() => this.task_query.table_loading = false)
+            },
+            handle_task_plugin_selection_change(val) {
+            　　this.create_task_form.plugin_list = val;
+            },
+            task_file_on_remove(file, fileList) {
                 this.create_task_form.url_file = "";
                 this.create_task_form.file_list=[];
             },
-            before_upload(file){
+            task_file_before_upload(file){
                 let fd = new FormData();
                 fd.append('url_file',file);
                 this.$http.post("/api/task/file_upload",fd).then(
@@ -347,12 +330,13 @@ http://192.168.1.2:8080/
                 
                 return false
             },
-            url_format_change(){
+            task_url_format_change(){
                 if(this.create_task_form.radio==1){
-                    this.$refs.url_list.resetField();
+                    this.create_task_form.url_file = "";
+                    this.create_task_form.file_list=[];
                 }
                 else if(this.create_task_form.radio==2){
-                    this.$refs.url_file.resetField();
+                    this.$refs.url_list.resetField();
                 }
                 
             },
@@ -380,14 +364,10 @@ http://192.168.1.2:8080/
                         });
                     }
                     else if(this.create_task_form.radio==2){
-                        this.$refs.task.validateField(["url_file"],(errormsg)=>{
-                        if(!errormsg){
-                            is_next = is_next &&true;
-                        }
-                        else{
+                        if(this.create_task_form.url_file==""){
                             is_next = is_next &&false;
+                            this.$layer_message("请上传目标文件");
                         }
-                        });
                     }
                     else{
 
@@ -406,151 +386,290 @@ http://192.168.1.2:8080/
                     this.create_task_form.active = 5
                 } 
             },
-                // 步骤条上一步的方法
             pre() {
                 if (this.create_task_form.active-- < 0) this.create_task_form.active = 0
                 },
-             //刷新
-            refresh(){
-                this.search(this.currentPage);
+            plugin_refresh(){
+                this.plugin_search(this.plugin_query.current_plugin_page);
             },
             get_row_keys(row) {
                     return row.id;
             },
-            handleCurrentChange(val) {
-                this.currentPage = val;
-                this.search(this.currentPage);
+            handle_plugin_current_change(val) {
+                this.plugin_query.current_plugin_page = val;
+                this.plugin_search(this.plugin_query.current_plugin_page);
             },
-
-            //漏洞类型查询
-            search_by_vultype(){
-                this.currentPage = 1;
-                this.search();
+            plugin_search_by_vultype(){
+                this.plugin_query.current_plugin_page = 1;
+                this.plugin_search();
             },
-
-            //危害等级查询
-            search_by_level(){
-                this.currentPage = 1;
-                this.search();
+            plugin_search_by_level(){
+                this.plugin_query.current_plugin_page = 1;
+                this.plugin_search();
             },
-
-            //利用效果查询
-            search_by_effect(){
-                this.currentPage = 1;
-                this.search();
+            plugin_search_by_effect(){
+                this.plugin_query.current_plugin_page = 1;
+                this.plugin_search();
             },
-
-            //应用名称查询
-            search_by_application(){
-                this.currentPage = 1;
-                this.search();
+            plugin_search_by_application(){
+                this.plugin_query.current_plugin_page = 1;
+                this.plugin_search();
             },
-
-            //应用归类查询
-            search_by_category(){
-                this.currentPage = 1;
-                this.search();
+            plugin_search_by_category(){
+                this.plugin_query.current_plugin_page = 1;
+                this.plugin_search();
             },
-
-            //获取漏洞类型
-            get_vul_types () {
+            get_plugin_vul_types() {
                 this.$http.get('/api/exploit/vultypes').then(res => {
-                    this.vultype_options = res.result.data
+                    this.plugin_query.vultype_options = res.result.data
                 }, res => this.$layer_message(res.result))
             },
-
-            //获取危害等级
-            get_levels () {
+            get_plugin_levels () {
                 this.$http.get('/api/exploit/levels').then(res => {
-                    this.level_options = res.result.data
+                    this.plugin_query.level_options = res.result.data
                 }, res => this.$layer_message(res.result))
             },
-            //获取利用效果
-            get_effects () {
+            get_plugin_effects () {
                 this.$http.get('/api/exploit/effects').then(res => {
-                    this.effect_options = res.result.data
+                    this.plugin_query.effect_options = res.result.data
                 }, res => this.$layer_message(res.result))
             },
-
-            //获取应用名称
-            get_applications () {
+            get_plugin_applications () {
                 this.$http.get('/api/exploit/applications').then(res => {
-                    this.application_options = res.result.data
+                    this.plugin_query.application_options = res.result.data
                 }, res => this.$layer_message(res.result))
             },
-
-            //获取应用归类
-            get_categories () {
+            get_plugin_categories() {
                 this.$http.get('/api/exploit/categories').then(res => {
-                    this.category_options = res.result.data
+                    this.plugin_query.category_options = res.result.data
                 }, res => this.$layer_message(res.result))
             },
-
-            //获取语言种类
-            get_languages () {
+            get_plugin_aim_languages() {
                 this.$http.get('/api/exploit/languages').then(res => {
-                    this.language_options = res.result.data
+                    this.plugin_query.language_options = res.result.data
                 }, res => this.$layer_message(res.result))
             },
-
-            search (page) {
-                if (!page) this.currentPage = 1;
-                this.tableLoading = true;
-                this.expands=[];
+            plugin_search(page) {
+                if (!page) this.plugin_query.current_plugin_page = 1;
+                this.plugin_query.table_loading = true;
+                this.plugin_query.expands=[];
                 let api_uri = '/api/exploit/plugins';
-                this.$http.get(api_uri, {params: {page: this.currentPage, plugin_query: this.plugin_query}}).then(res => {
-                    this.plugins = res.result
-                }, res => this.$layer_message(res.result)).finally(() => this.tableLoading = false)
+                this.$http.get(api_uri, {params: {page: this.plugin_query.current_plugin_page, plugin_query: this.plugin_query}}).then(res => {
+                    this.plugin_query.plugins = res.result
+                }, res => this.$layer_message(res.result)).finally(() => this.plugin_query.table_loading = false)
             },
-
             get_plugin_extend (row, expanded) {
                 if (expanded.length>0) {
-                    this.expands = [];
-                    this.expands.push(row.id);
+                    this.plugin_query.expands = [];
+                    this.plugin_query.expands.push(row.id);
                     this.$http.get(`/api/exploit/plugins/${row.id}/extend`).then(res => {
                         this.$set(row, 'extend', res.result);
                     }, res => this.$layer_message(res.result))
                 }
                 else{
-                    this.expands = [];
+                    this.plugin_query.expands = [];
                 }
             },
-
-            handle_task_add () {
-                this.form = {};
-                this.title = '创建任务';
-                this.dialogVisible = true;
-                //this.importStatus = true;
+            get_plugin_exec_models(){
+                this.$http.get('/api/task/exec_models').then(
+                    res => {
+                        this.create_task_form.exec_model.exec_model_options = res.result.data;
+                    },
+                    res => {
+                        this.$layer_message(res.result)
+                })
             },
-
-            handleEdit (row) {
-                this.$http.get(`/api/exploit/plugins/${row.id}`).then(res => {
-                        this.form = res.result;
+            handle_task_add () {
+                this.create_task_form = {
+                    name:"",
+                    active: 0,
+                    at_once:false,
+                    radio:"1",
+                    url_list:"",
+                    url_file:"",
+                    file_list:[],
+                    plugin_list:[],
+                    exec_model:{
+                        exec_model_id:1,
+                        exec_model_options:[]
+                    },
+                    btnSaveLoading: false
+                };
+                this.plugin_search();
+                this.get_plugin_vul_types();
+                this.get_plugin_levels ();
+                this.get_plugin_effects();
+                this.get_plugin_applications();
+                this.get_plugin_categories();
+                this.get_plugin_aim_languages();
+                this.get_plugin_exec_models();
+                this.title = '创建任务';
+                this.dialog_visible = true;
+                
+            },
+            task_edit(row){
+                this.create_task_form = {
+                    name:"",
+                    active: 0,
+                    desc:"",
+                    at_once:false,
+                    radio:"1",
+                    url_list:"",
+                    url_file:"",
+                    file_list:[],
+                    plugin_list:[],
+                    exec_model:{
+                        exec_model_id:1,
+                        exec_model_options:[]
+                    },
+                    btnSaveLoading: false
+                };
+                this.plugin_search();
+                this.get_plugin_vul_types();
+                this.get_plugin_levels ();
+                this.get_plugin_effects();
+                this.get_plugin_applications();
+                this.get_plugin_categories();
+                this.get_plugin_aim_languages();
+                this.get_plugin_exec_models();
+                this.$http.get(`/api/task/edit/${row.id}`).then(res => {
+                        this.create_task_form.id=res.result.id;
+                        this.create_task_form.name = res.result.name;
+                        if(res.result.url_list!=""){
+                            this.create_task_form.url_list=res.result.url_list.replace(",","\n");
+                        }
+                        else{
+                            let temp=res.result.url_file_path.split("_");
+                            temp.shift();
+                            let file_name=temp.join("_");
+                            this.create_task_form.url_file=file_name;
+                            this.create_task_form.file_list=[{name:file_name,path:res.result.url_file_path}]
+                        }
+                        this.create_task_form.exec_model.exec_model_id=res.result.exec_model_id;
+                        this.create_task_form.desc=res.result.desc;
+                        for(let i in res.result.plugins.split(","))
+                            this.$refs.plugin_tables.toggleRowSelection(this.plugin_query.plugins.data[i],true);
+                        
                     }, res => this.$layer_message(res.result))
-                this.dialogVisible = true;
-                this.title = '编辑漏洞插件';
-                //this.importStatus = false;
+                this.dialog_visible = true;
+                this.title = '编辑任务';
             },
             task_commit () {
-                this.btnSaveLoading = true;
-                let request;
-                if (this.form.id) {
-                    request = this.$http.put(`/api/task/index/${this.form.id}`, this.form)
-                } else {
-                    request = this.$http.post(`/api/task/index`, this.form)
+                this.create_task_form.btnSaveLoading = true;
+                if (this.create_task_form.id) {
+                    let form={
+                        name:"",
+                        url_list:"",
+                        plugins:"",
+                        desc:"",
+                        url_file_path:"",
+                        exec_model_id:1,
+                        at_once:false
+                    }
+                    form.name=this.create_task_form.name;
+                    let plugins=[];
+                    for(let plugin of this.create_task_form.plugin_list){
+                        plugins.push(plugin.id);
+                    }
+                    form.plugins=plugins.join(",");
+                    form.desc=this.create_task_form.desc;
+                    if(this.create_task_form.url_list!=""){
+                        let urls=Array.from(new Set(this.create_task_form.url_list.split("\n")));
+                        form.url_list=urls.join(",");
+                        form.url_file_path="";
+                    }
+                    else{
+                        form.url_list="";
+                        form.url_file_path=this.create_task_form.file_list[0].path;
+                    }
+                    form.exec_model_id=this.create_task_form.exec_model.exec_model_id;
+                    this.$http.put(`/api/task/edit/${this.create_task_form.id}`,form).then(
+                        res=>{
+                            console.log("success");
+                            if(this.create_task_form.at_once){
+                                this.$http.get(`/api/task/start/${res.result.id}`).then(
+                                    res=>{
+                                        this.create_task_form.btnSaveLoading = false;
+                                        this.$layer_message('更新任务成功并启动任务', 'success');
+                                        this.dialog_visible = false;
+                                    },
+                                    res=>{
+                                        this.create_task_form.btnSaveLoading = false;
+                                        this.$layer_message('更新任务成功,但任务未启动');
+                                        this.dialog_visible = false;
+                                    }
+                                );
+                            }
+                            else{
+                                this.create_task_form.btnSaveLoading = false;
+                                this.$layer_message('更新任务成功','success');
+                                this.dialog_visible = false;
+                            }
+                        },
+                        res=>{
+                            console.log("fail");
+                            this.$layer_message(res.result);
+                            this.create_task_form.btnSaveLoading = false;
+                        }
+                    )
+                    
+                } 
+                else {
+                   let form={
+                        name:"",
+                        url_list:"",
+                        plugins:"",
+                        desc:"",
+                        url_file_path:"",
+                        exec_model_id:1,
+                        at_once:false
+                    }
+                    form.name=this.create_task_form.name;
+                    let plugins=[];
+                    for(let plugin of this.create_task_form.plugin_list){
+                        plugins.push(plugin.id);
+                    }
+                    form.plugins=plugins.join(",");
+                    form.desc=this.create_task_form.desc;
+                    if(this.create_task_form.url_list!=""){
+                        let urls=Array.from(new Set(this.create_task_form.url_list.split("\n")));
+                        form.url_list=urls.join(",");
+                        form.url_file_path="";
+                    }
+                    else{
+                        form.url_list="";
+                        form.url_file_path=this.create_task_form.file_list[0].path;
+                    }
+                    form.exec_model_id=this.create_task_form.exec_model.exec_model_id;
+                    this.$http.post('/api/task/add', form).then(
+                        res => {
+                            if(this.create_task_form.at_once){
+                                this.$http.get(`/api/task/start/${res.result.id}`).then(
+                                    res=>{
+                                        this.create_task_form.btnSaveLoading = false;
+                                        this.$layer_message('创建任务成功并启动任务', 'success');
+                                        this.dialog_visible = false;
+                                    },
+                                    res=>{
+                                        this.create_task_form.btnSaveLoading = false;
+                                        this.$layer_message('创建任务成功,但任务未启动');
+                                        this.dialog_visible = false;
+                                    }
+                                );
+                            }
+                            else{
+                                this.create_task_form.btnSaveLoading = false;
+                                this.$layer_message('创建任务成功','success');
+                                this.dialog_visible = false;
+                            }
+                            //this.task_search(this.currentPage);
+                    }, res =>{
+                        this.$layer_message(res.result);
+                        this.create_task_form.btnSaveLoading = false;
+                    });
+                    
                 }
-                request.then(() => {
-                    this.dialogVisible = false;
-                    this.$layer_message('提交成功', 'success');
-                    this.search(this.currentPage);
-                    this.expands=[];
-                    /*this.get_vul_types();
-                    this.get_levels ();
-                    this.get_effects();
-                    this.get_applications();
-                    this.get_categories();
-                    this.get_languages();*/
-                }, res => this.$layer_message(res.result)).finally(() => this.btnSaveLoading = false)
+                
             },
             deleteCommit (row) {
                 this.$confirm('此操作将永久删除该漏洞插件，是否继续？', '删除确认', {type: 'warning'}).then(() => {
@@ -564,13 +683,7 @@ http://192.168.1.2:8080/
 
         },
         created () {
-            this.search();
-            this.get_vul_types();
-            this.get_levels ();
-            this.get_effects();
-            this.get_applications();
-            this.get_categories();
-            this.get_languages();
+            this.task_search();
         }
     }
 </script>

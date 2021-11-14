@@ -46,7 +46,7 @@ def exception_handler(ex):
 
 def auth_middleware():
     if request.path == '/account/users/login/' or request.path.startswith('/apis/configs/') \
-            or request.path.startswith('/apis/files/') or request.path.startswith('/task/start/'):
+            or request.path.startswith('/apis/files/'):
         return None
     token = request.headers.get('X-TOKEN')
     if token and len(token) == 32:

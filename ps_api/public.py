@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from concurrent.futures import ThreadPoolExecutor
 import config
 from flask_simpleldap import LDAP
 from libs.pocstrike.lib.core.common import set_paths
@@ -20,6 +21,7 @@ app.config['LDAP_PORT'] = app.config['LDAP_CONFIG'].get('port')
 
 db = SQLAlchemy(app)
 ldap = LDAP(app)
+executor = ThreadPoolExecutor(20)
 
 
 def module_path():

@@ -17,6 +17,7 @@ class Task(db.Model, ModelMixin):
     user_id = db.Column(db.ForeignKey('account_users.id', ondelete='CASCADE'))
     finish_time = db.Column(db.String(255))
     exec_model_id = db.Column(db.ForeignKey('exec_model.id', ondelete='CASCADE'))
+    status = db.Column(db.Integer)
 
     def __repr__(self):
         return '<Task name=%r>' % (self.name)
