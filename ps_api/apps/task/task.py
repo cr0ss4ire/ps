@@ -43,6 +43,10 @@ def search_levels():
 
 def task_exec(task_id):
     try:
+        task = Task.query.get_or_404(task_id)
+        task.start_time = datetime.now()
+        task.status = 1
+        task.save()
         banner()
         options = {
             'verbose': 2,
@@ -73,37 +77,28 @@ def task_exec(task_id):
             'ppt': False
         }
         init_options(options)
-
         data_to_stdout("[*] starting at {0}\n\n".format(time.strftime("%X")))
         init()
         try:
             start()
         except threading.ThreadError:
             raise
-
     except PocstrikeUserQuitException:
         pass
-
     except PocstrikeShellQuitException:
         pass
-
     except PocstrikeSystemException:
         pass
-
     except KeyboardInterrupt:
         pass
-
     except EOFError:
         pass
-
     except SystemExit:
         pass
-
     except Exception:
         exc_msg = traceback.format_exc()
         data_to_stdout(exc_msg)
         raise SystemExit
-
     finally:
         data_to_stdout("\n[*] shutting down at {0}\n\n".format(time.strftime("%X")))
 
@@ -211,7 +206,7 @@ def file_upload():
     if file.filename.rsplit('.', 1)[1].lower() == "txt":
         try:
             alise_name = str(int(time.time()))+"_"+file.filename
-            upload_path = "./upload/"+str(g.user.id)+"/"
+            upload_path = "./upload/"+str(g.user.id)+"/task_targets/"
             if not os.path.exists(upload_path):
                 os.mkdir(upload_path)
             file.save(os.path.join(upload_path, alise_name))

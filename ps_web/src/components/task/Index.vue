@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-row>
-            <el-col :span="19">
+            <el-col :span="16">
                 <el-form :inline="true" :model="task_query">
                     <el-form-item>
                         <el-input v-model="task_query.name" clearable placeholder="任务名称"></el-input>
@@ -16,7 +16,7 @@
                     </el-form-item>
                 </el-form>
             </el-col>
-            <el-col :span="5"  style="text-align: right">
+            <el-col :span="8"  style="text-align: right">
                 <el-button  icon="el-icon-refresh" @click="task_refresh()">刷新</el-button>
                 <el-button v-if="has_permission('exploit_plugin_add')" type="primary" icon="el-icon-plus" @click="handle_task_add">新建任务</el-button>
             </el-col>
@@ -288,6 +288,20 @@ http://192.168.1.2:8080/
             }
         },
         methods: {
+            task_refresh(){
+                this.task_search(this.task_query.current_task_page);
+            },
+            task_start(row){
+                this.$http.get(`/api/task/start/${row.id}`).then(
+                    res=>{
+                        this.$layer_message('任务启动成功', 'success');
+                    },
+                    res=>{
+                        this.$layer_message('任务启动失败');
+                    }
+                );
+                this.task_search(this.currentPage);
+            },
             task_search_by_status(){
                 this.task_query.current_task_page = 1;
                 this.task_search();
@@ -611,7 +625,9 @@ http://192.168.1.2:8080/
                             this.$layer_message(res.result);
                             this.create_task_form.btnSaveLoading = false;
                         }
+                        
                     )
+                    this.task_search(this.currentPage);
                     
                 } 
                 else {
@@ -662,7 +678,7 @@ http://192.168.1.2:8080/
                                 this.$layer_message('创建任务成功','success');
                                 this.dialog_visible = false;
                             }
-                            //this.task_search(this.currentPage);
+                            this.task_search();
                     }, res =>{
                         this.$layer_message(res.result);
                         this.create_task_form.btnSaveLoading = false;
