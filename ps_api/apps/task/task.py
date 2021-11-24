@@ -1,6 +1,5 @@
-from flask import Blueprint, request, g, url_for, send_from_directory
+from flask import Blueprint, request, g
 import os
-import sys
 import threading
 import time
 import traceback
@@ -258,11 +257,11 @@ def put(task_id):
     args = AttrDict(name=Argument('name', type=str, help='请输入任务名称!'),
                     url_list=Argument('url_list', type=str, default="", help='请输入目标列表!'),
                     plugins=Argument(
-                        'plugins', type=str, help='请选择漏洞插件!'),
+                        'plugins', type=str, help='请选择漏洞!'),
                     desc=Argument('desc', type=str, help='请输入任务描述!'),
                     url_file_path=Argument('url_file_path', type=str, default="", help='请选择目标文件!'),
                     exec_model_id=Argument(
-                        'exec_model_id', type=int, help='请选择攻击模式！'))
+                        'exec_model_id', type=int, help='请选择任务执行模式！'))
     form, error = JsonParser(*args.values()).parse()
     if error is None:
         exists_record = Task.query.filter(Task.name == form.name).first()
