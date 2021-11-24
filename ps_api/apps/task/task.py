@@ -44,7 +44,7 @@ def search_levels():
 def task_exec(task_id):
     try:
         task = Task.query.get_or_404(task_id)
-        task.start_time = datetime.now()
+        task.start_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         task.status = 1
         task.save()
         banner()
@@ -233,7 +233,7 @@ def add():
         if Task.query.filter(Task.name == form.name).first():
             return json_response(message='任务名称不能重复！')
         task = Task(**form)
-        task.create_time = datetime.now()
+        task.create_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         task.update_time = ""
         task.user_id = g.user.id
         task.start_time = ""
@@ -269,7 +269,7 @@ def put(task_id):
         if exists_record and exists_record.id != task_id:
             return json_response(message='任务名称不能重复！')
         task = Task.query.get_or_404(task_id)
-        task.update_time = datetime.now()
+        task.update_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         task.update(**form)
         task.save()
         return json_response(task)
