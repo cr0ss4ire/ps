@@ -49,12 +49,14 @@ def init_db():
     import apps.assets.models
     import apps.schedule.models
     import apps.setting.models
+    import apps.exploit.models
+    import apps.task.models
 
     user_input = input('是否要初始化数据库，该操作会清空所有数据[y|n]？')
     if user_input.strip() == 'y':
         db.drop_all()
         db.create_all()
-        with open(os.path.join(BASE_DIR, 'libs', 'sql', 'permissions.sql'), 'r') as f:
+        with open(os.path.join(BASE_DIR, 'libs', 'sql', 'permissions.sql'), 'r', encoding='UTF-8') as f:
             line = f.readline()
             while line:
                 if line.startswith('INSERT INTO'):

@@ -1,11 +1,12 @@
 {
-    "python.pythonPath": "C:\\Users\\cr0ss4ire\\Desktop\\spug-1.2.0\\spug_api\\venv\\Scripts\\python.exe",
     "python.linting.flake8Args": [
         "--max-line-length=150"
     ],
     "python.formatting.provider": "autopep8",
     "python.linting.flake8Enabled": true,
     "python.linting.flake8CategorySeverity.F": "Warning",
-    "python.linting.pylintEnabled": false
+    "python.linting.pylintEnabled": false,
+    "python.pythonPath": "C:\\Users\\cr0ss4ire\\Desktop\\ps\\ps_api\\venv\\Scripts\\python.exe",
+    "python.defaultInterpreterPath": "C:\\Users\\cr0ss4ire\\Desktop\\ps\\ps_api\\venv\\Scripts\\python.exe"
 
 }

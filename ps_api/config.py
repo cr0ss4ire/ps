@@ -1,10 +1,12 @@
 from pytz import timezone
 import os
+from datetime import timedelta
 
 DEBUG = True
 TIME_ZONE = timezone('Asia/Shanghai')
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@127.0.0.1:3306/spug'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@127.0.0.1:3306/pocstrike'
+SEND_FILE_MAX_AGE_DEFAULT = timedelta(seconds=1)
 # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'test.db')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False

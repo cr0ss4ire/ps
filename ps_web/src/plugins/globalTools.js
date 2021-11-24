@@ -58,17 +58,20 @@ function deepCopy(obj) {
 // response处理
 function handleResponse(response, router) {
     if (response.status === 401) {
-        router.push({name: 'login'});
+        router.push({ name: 'login' });
         response['result'] = '请登录';
         return Promise.reject(response)
-    } else if (response.data.hasOwnProperty('data') && response.data.hasOwnProperty('message')) {
+    } 
+    else if (response.data.hasOwnProperty('data') && response.data.hasOwnProperty('message')) {
         if (response.data.message) {
             response['result'] = response.data.message
-        } else {
+        } 
+        else {
             response['result'] = response.data.data;
             return Promise.resolve(response)
         }
-    } else {
+    } 
+    else {
         response['result'] = '无效的数据格式'
     }
     return Promise.reject(response)

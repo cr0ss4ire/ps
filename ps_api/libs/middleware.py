@@ -49,6 +49,8 @@ def auth_middleware():
             or request.path.startswith('/apis/files/'):
         return None
     token = request.headers.get('X-TOKEN')
+    if not token:
+        token = request.args.get("x-token")
     if token and len(token) == 32:
         g.user = User.query.filter_by(access_token=token).first()
         if g.user and g.user.is_active and g.user.token_expired >= time.time():

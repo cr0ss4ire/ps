@@ -1,12 +1,9 @@
 APScheduler==3.6.0
 asn1crypto==0.24.0
 backports.ssl-match-hostname==3.7.0.1
-bcrypt==3.1.6
 certifi==2019.3.9
-cffi==1.12.3
 chardet==3.0.4
 Click==7.0
-cryptography==2.6.1
 docker==3.7.2
 docker-pycreds==0.4.0
 Flask==1.0.2
@@ -24,8 +21,6 @@ paramiko==2.4.2
 pip-review==1.0
 pyasn1==0.4.5
 pycparser==2.19
-pycrypto==2.6.1
-pycryptodome==3.8.1
 pyexcel==0.5.13
 pyexcel-io==0.5.17
 pyexcel-webio==0.1.4
@@ -42,4 +37,4 @@ tzlocal==1.5.1
 urllib3==1.24.3
 websocket-client==0.56.0
 Werkzeug==0.16.0
-python-ldap==3.2.0
+python-ldap==3.3.1
