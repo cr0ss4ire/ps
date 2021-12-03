@@ -297,7 +297,7 @@ def _set_pocs_modules():
             # step2. load poc from given file path
             try:
                 if not load_poc_sucess:
-                    if not poc.startswith('ssvid-') and check_file(poc):
+                    if check_file(poc):
                         info_msg = "loading PoC script '{0}'".format(poc)
                         logger.info(info_msg)
                         load_poc_sucess = load_file_to_module(poc)
@@ -360,7 +360,7 @@ def _cleanup_options():
     if conf.poc:
         if isinstance(conf.poc, str):
             conf.poc = [conf.poc]
-        conf.poc = [poc.lower() if poc.lower().startswith('ssvid-') else poc for poc in conf.poc]
+        # conf.poc = [poc.lower() if poc.lower().startswith('ssvid-') else poc for poc in conf.poc]
 
     if conf.url_file:
         conf.url_file = os.path.expanduser(conf.url_file)

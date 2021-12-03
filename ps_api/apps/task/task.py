@@ -7,11 +7,7 @@ import time
 from apps.exploit.models import Exploit, VulType, Category, Application, Level, Language, Effect
 from apps.account.models import User
 from apps.task.models import Task, ExecModel
-# from apps.configuration.models import ConfigKey, AppConfigRel, Environment
-# from apps.assets.models import Host
 from libs.tools import json_response, JsonParser, Argument, AttrDict
-# from libs.utils import Container
-# from docker.errors import DockerException
 from datetime import datetime
 from public import executor
 from libs.decorators import require_permission
@@ -26,7 +22,6 @@ from libs.pocstrike.lib.core.common import data_to_stdout
 from libs.pocstrike.lib.core.data import logger
 from libs.pocstrike.lib.parse.cmd import cmd_line_parser
 from libs.pocstrike.lib.controller.controller import start
-# from apps.deploy.utils import get_built_in_menus
 
 blueprint = Blueprint(__name__, __name__)
 
@@ -44,14 +39,15 @@ def task_exec(task_id):
     try:
         task = Task.query.get_or_404(task_id)
         task.start_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        task.status = 1
+        # task.status = 1
         task.save()
+        print(task)
         banner()
         options = {
             'verbose': 2,
-            'url': ['http://192.168.2.245', 'http://192.168.2.245:8080'],
+            'url': ['http://192.168.2.243', 'http://192.168.2.243:8080'],
             'url_file': None,
-            'poc': ['_2_drupal_rce.py', '_1_tomcat_upload.py'],
+            'poc': ['_2_drupal_rce.py', '_1_tomcat_uPload.py', 'ssvid-aaSDaa.py'],
             'configFile': None,
             'mode': 'attack',
             'cookie': None,
@@ -68,7 +64,7 @@ def task_exec(task_id):
             'connect_back_host': None,
             'connect_back_port': None,
             'plugins': None,
-            'pocs_path': None,
+            'pocs_path': "./upload/1/plugins",
             'threads': 1,
             'batch': None,
             'check_requires': False,
@@ -116,14 +112,14 @@ def get_task(task_id):
     return json_response(data=query.first())
 
 
-@blueprint.route('/index', methods=['GET'])
+@blueprint.route('/index', methods=['POST'])
 @require_permission('task_view')
 def get():
     form, error = JsonParser(
         Argument('page', type=int, default=1, required=False),
         Argument('pagesize', type=int, default=10, required=False),
         Argument('task_query', type=dict, default={}),
-    ).parse(request.args)
+    ).parse()
     if error is None:
         query = Task.query.join(User, User.id == Task.user_id).with_entities(
             Task.id, Task.name, Task.status, Task.create_time, Task.update_time, Task.start_time, Task.finish_time,
@@ -148,54 +144,6 @@ def get():
             'total': query.count()
         })
     return json_response(message=error)
-
-
-'''@blueprint.route('/vultypes', methods=['GET'])
-@require_permission('exploit_view')
-def search_vultypes():
-    query = VulType.query
-    vultypes = query.all()
-    total = query.count()
-    return json_response({'data': [x.to_json() for x in vultypes], 'total': total})
-
-
-
-
-
-@blueprint.route('/effects', methods=['GET'])
-@require_permission('exploit_view')
-def search_effects():
-    query = Effect.query
-    effects = query.all()
-    total = query.count()
-    return json_response({'data': [x.to_json() for x in effects], 'total': total})
-
-
-@blueprint.route('/applications', methods=['GET'])
-@require_permission('exploit_view')
-def search_applications():
-    query = Application.query
-    applications = query.all()
-    total = query.count()
-    return json_response({'data': [x.to_json() for x in applications], 'total': total})
-
-
-@blueprint.route('/categories', methods=['GET'])
-@require_permission('exploit_view')
-def search_categories():
-    query = Category.query
-    categories = query.all()
-    total = query.count()
-    return json_response({'data': [x.to_json() for x in categories], 'total': total})
-
-
-@blueprint.route('/languages', methods=['GET'])
-@require_permission('exploit_view')
-def search_languages():
-    query = Language.query
-    languages = query.all()
-    total = query.count()
-    return json_response({'data': [x.to_json() for x in languages], 'total': total})'''
 
 
 @blueprint.route('/file_upload', methods=['POST'])
@@ -226,7 +174,7 @@ def add():
                     desc=Argument('desc', type=str, help='请输入任务描述!'),
                     url_file_path=Argument('url_file_path', type=str, default="", help='请选择目标文件!'),
                     exec_model_id=Argument(
-                        'exec_model_id', type=int, help='请选择攻击模式！'))
+                        'exec_model_id', type=int, help='请选择任务执行模式！'))
     form, error = JsonParser(*args.values()).parse()
     if error is None:
         if Task.query.filter(Task.name == form.name).first():

@@ -319,7 +319,7 @@ http://192.168.1.2:8080/
                 form.task_status=this.task_query.task_status;
                 form.name=this.task_query.name;
                 this.task_query.table_loading = true;
-                this.$http.get('/api/task/index', {params: {page: this.task_query.current_task_page, task_query: form}}).then(res => {
+                this.$http.post('/api/task/index', {page: this.task_query.current_task_page, task_query: form}).then(res => {
                     this.task_query.tasks = res.result
                 }, res => this.$layer_message(res.result)).finally(() => this.task_query.table_loading = false)
             },
@@ -467,8 +467,8 @@ http://192.168.1.2:8080/
                 if (!page) this.plugin_query.current_plugin_page = 1;
                 this.plugin_query.table_loading = true;
                 this.plugin_query.expands=[];
-                let api_uri = '/api/exploit/plugins';
-                this.$http.get(api_uri, {params: {page: this.plugin_query.current_plugin_page, plugin_query: this.plugin_query}}).then(res => {
+                let api_uri = '/api/exploit/vulnerability/list';
+                this.$http.post(api_uri, {page: this.plugin_query.current_plugin_page, plugin_query: this.plugin_query}).then(res => {
                     this.plugin_query.plugins = res.result
                 }, res => this.$layer_message(res.result)).finally(() => this.plugin_query.table_loading = false)
             },
