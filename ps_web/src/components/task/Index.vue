@@ -300,7 +300,7 @@ http://192.168.1.2:8080/
                         this.$layer_message('任务启动失败');
                     }
                 );
-                this.task_search(this.currentPage);
+                this.task_search(this.task_query.current_task_page);
             },
             task_search_by_status(){
                 this.task_query.current_task_page = 1;
@@ -627,7 +627,7 @@ http://192.168.1.2:8080/
                         }
                         
                     )
-                    this.task_search(this.currentPage);
+                    this.task_search(this.task_query.current_task_page);
                     
                 } 
                 else {

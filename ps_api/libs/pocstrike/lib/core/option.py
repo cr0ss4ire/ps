@@ -220,9 +220,9 @@ def _set_multiple_targets():
 
 def _set_task_queue():
     if kb.registered_pocs and kb.targets:
-        for poc_module in kb.registered_pocs:
+        for vul_id in kb.registered_pocs:
             for target in kb.targets:
-                kb.task_queue.put((target, poc_module))
+                kb.task_queue.put((target, vul_id))
 
 
 def _set_threads():
@@ -278,12 +278,12 @@ def _set_pocs_modules():
     # load poc scripts .pyc file support
     if conf.poc:
         # step1. load system packed poc from libs.pocstrike/pocs folder
-        exists_poc_with_ext = list(
+        '''exists_poc_with_ext = list(
             filter(lambda x: x not in ['__init__.py', '__init__.pyc'], os.listdir(paths.POCSTRIKE_POCS_PATH)))
-        exists_pocs = dict([os.path.splitext(x) for x in exists_poc_with_ext])
+        exists_pocs = dict([os.path.splitext(x) for x in exists_poc_with_ext])'''
         for poc in conf.poc:
             load_poc_sucess = False
-            if any([poc in exists_poc_with_ext, poc in exists_pocs]):
+            '''if any([poc in exists_poc_with_ext, poc in exists_pocs]):
                 poc_name, poc_ext = os.path.splitext(poc)
                 if poc_ext in ['.py', '.pyc']:
                     file_path = os.path.join(paths.POCSTRIKE_POCS_PATH, poc)
@@ -292,17 +292,17 @@ def _set_pocs_modules():
                 if file_path:
                     info_msg = "loading PoC script '{0}'".format(file_path)
                     logger.info(info_msg)
-                    load_poc_sucess = load_file_to_module(file_path)
+                    load_poc_sucess = load_file_to_module(file_path)'''
 
             # step2. load poc from given file path
             try:
                 if not load_poc_sucess:
-                    if check_file(poc):
-                        info_msg = "loading PoC script '{0}'".format(poc)
+                    if check_file(poc[1]):
+                        info_msg = "loading PoC script '{0}'".format(poc[1])
                         logger.info(info_msg)
-                        load_poc_sucess = load_file_to_module(poc)
+                        load_poc_sucess = load_file_to_module(poc[1], poc[0])
             except PocstrikeSystemException:
-                logger.error('PoC file "{0}" not found'.format(repr(poc)))
+                logger.error('PoC file "{0}" not found'.format(repr(poc[1])))
                 continue
 
 
@@ -562,13 +562,13 @@ def init():
     _cleanup_options()
     _create_directory()
     _set_multiple_targets()
-    _set_user_pocs_path()
+    # _set_user_pocs_path()
     _set_pocs_modules()  # poc module模块要在插件模块前，poc选项中某些参数调用了插件
-    _set_plugins()
-    _init_targets_plugins()
-    _init_pocs_plugins()
+    # _set_plugins()
+    # _init_targets_plugins()
+    # _init_pocs_plugins()
     _set_task_queue()
-    _init_results_plugins()
+    # _init_results_plugins()
 
     if any((conf.url, conf.url_file, conf.plugins)):
         _set_http_cookie()

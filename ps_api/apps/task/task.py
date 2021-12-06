@@ -6,7 +6,7 @@ import traceback
 import time
 from apps.exploit.models import Exploit, VulType, Category, Application, Level, Language, Effect
 from apps.account.models import User
-from apps.task.models import Task, ExecModel
+from apps.task.models import Task, ExecModel, TaskDetail
 from libs.tools import json_response, JsonParser, Argument, AttrDict
 from datetime import datetime
 from public import executor
@@ -22,6 +22,7 @@ from libs.pocstrike.lib.core.common import data_to_stdout
 from libs.pocstrike.lib.core.data import logger
 from libs.pocstrike.lib.parse.cmd import cmd_line_parser
 from libs.pocstrike.lib.controller.controller import start
+from libs.pocstrike.lib.core.data import kb
 
 blueprint = Blueprint(__name__, __name__)
 
@@ -35,19 +36,35 @@ def search_levels():
     return json_response({'data': [x.to_json() for x in exec_models], 'total': total})
 
 
-def task_exec(task_id):
+def task_detail(task_id, user_id):
+    for item in kb.results:
+        form = {}
+        form["target"] = item.url
+        form["vul_id"] = item.vul_id
+        form["status"] = 1 if item.status == "success" else 0
+        form["task_id"] = task_id
+        form["user_id"] = user_id
+        task_detail = TaskDetail(**form)
+        task_detail.save()
+
+
+def task_exec(task_id, user_id):
     try:
         task = Task.query.get_or_404(task_id)
         task.start_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # task.status = 1
-        task.save()
+        vul_dict = {}
+        for vul_id in task.plugins.split(','):
+            vul = Exploit.query.with_entities(Exploit.id, Exploit.plugin_file_path).filter(Exploit.id == vul_id).first()
+            vul_dict[vul_id] = vul.plugin_file_path
         print(task)
         banner()
         options = {
             'verbose': 2,
-            'url': ['http://192.168.2.243', 'http://192.168.2.243:8080'],
-            'url_file': None,
-            'poc': ['_2_drupal_rce.py', '_1_tomcat_uPload.py', 'ssvid-aaSDaa.py'],
+            # 'url': ['192.168.2.243', 'http://192.168.2.243:8080'],
+            'url': task.url_list.split(','),
+            'url_file': task.url_file_path,
+            # 'poc': [("5", './upload/1/plugins/1637739279__2_drupal_rce.py'), ("4", './upload/1/plugins/1637737614__1_tomcat_upload.py')],
+            'poc': vul_dict.items(),
             'configFile': None,
             'mode': 'attack',
             'cookie': None,
@@ -55,7 +72,7 @@ def task_exec(task_id):
             'referer': None,
             'agent': None,
             'random_agent': False,
-            'proxy': None,
+            'proxy': "socks5://127.0.0.1:8111",
             'proxy_cred': None,
             'timeout': None,
             'retry': False,
@@ -64,19 +81,26 @@ def task_exec(task_id):
             'connect_back_host': None,
             'connect_back_port': None,
             'plugins': None,
-            'pocs_path': "./upload/1/plugins",
+            'pocs_path': "",
             'threads': 1,
             'batch': None,
             'check_requires': False,
             'quiet': False,
-            'ppt': False
+            'ppt': False,
         }
         init_options(options)
         data_to_stdout("[*] starting at {0}\n\n".format(time.strftime("%X")))
         init()
         try:
+            task.status = 1
+            task.save()
             start()
+            task_detail(task_id, user_id)
+            task.status = 2
+            task.save()
         except threading.ThreadError:
+            task.status = -1
+            task.save()
             raise
     except PocstrikeUserQuitException:
         pass
@@ -101,7 +125,7 @@ def task_exec(task_id):
 @blueprint.route('/start/<int:task_id>', methods=['GET'])
 @require_permission('task_view')
 def start_task(task_id):
-    executor.submit(task_exec, task_id)
+    executor.submit(task_exec, task_id, g.user.id)
     return json_response()
 
 

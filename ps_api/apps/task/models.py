@@ -23,6 +23,20 @@ class Task(db.Model, ModelMixin):
         return '<Task name=%r>' % (self.name)
 
 
+class TaskDetail(db.Model, ModelMixin):
+    __tablename__ = 'task_detail'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    target = db.Column(db.String(255))
+    vul_id = db.Column(db.ForeignKey('exploit.id', ondelete='CASCADE'))
+    status = db.Column(db.Integer)
+    task_id = db.Column(db.ForeignKey('task.id', ondelete='CASCADE'))
+    user_id = db.Column(db.ForeignKey('account_users.id', ondelete='CASCADE'))
+
+    def __repr__(self):
+        return '<Task name=%r>' % (self.name)
+
+
 class ExecModel(db.Model, ModelMixin):
     __tablename__ = 'exec_model'
 

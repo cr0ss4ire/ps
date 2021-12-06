@@ -83,9 +83,9 @@ def show_task_result():
 
 def task_run():
     while not kb.task_queue.empty() and kb.thread_continue:
-        target, poc_module = kb.task_queue.get()
-        if not conf.console_mode:
-            poc_module = copy.deepcopy(kb.registered_pocs[poc_module])
+        target, vul_id = kb.task_queue.get()
+        # if not conf.console_mode:
+        poc_module = copy.deepcopy(kb.registered_pocs[vul_id])
         poc_name = poc_module.name
 
         # for hide some infomations
@@ -151,17 +151,18 @@ def task_run():
         result_status = "success" if result.is_success() else "failed"
 
         output = AttribDict(result.to_dict())
-        if conf.ppt:
+        '''if conf.ppt:
             # hide some information
-            target = desensitization(target)
+            target = desensitization(target)'''
 
         output.update({
             'target': target,
+            'vul_id': vul_id,
             'poc_name': poc_name,
             'created': time.strftime("%Y-%m-%d %X", time.localtime()),
             'status': result_status
         })
-        result_plugins_handle(output)
+        # result_plugins_handle(output)
         kb.results.append(output)
 
         # TODO
