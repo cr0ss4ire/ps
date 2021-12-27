@@ -3,7 +3,7 @@ import os
 import threading
 import time
 import traceback
-import time
+import json
 from apps.exploit.models import Exploit, VulType, Category, Application, Level, Language, Effect
 from apps.account.models import User
 from apps.task.models import Task, ExecModel, TaskDetail
@@ -11,7 +11,6 @@ from libs.tools import json_response, JsonParser, Argument, AttrDict
 from datetime import datetime
 from public import executor
 from libs.decorators import require_permission
-from libs.pocstrike.lib.core.option import init
 from libs.pocstrike.lib.core.option import init
 from libs.pocstrike.lib.core.option import init_options
 from libs.pocstrike.lib.core.exception import PocstrikeUserQuitException, PocstrikeSystemException
@@ -27,6 +26,26 @@ from libs.pocstrike.lib.core.data import kb
 blueprint = Blueprint(__name__, __name__)
 
 
+@blueprint.route('/detail/attack_queue/', methods=['POST'])
+@require_permission('task_view')
+def get_attack_queue():
+    form, error = JsonParser(
+        Argument('page', type=int, default=1, required=False),
+        Argument('pagesize', type=int, default=10, required=False),
+        Argument('attack_queue_query', type=dict, default={}),
+    ).parse()
+    if error is None:
+        query = TaskDetail.query.join(Exploit, TaskDetail.vul_id == Exploit.id).with_entities(TaskDetail.target, Exploit.name, Exploit.cve, TaskDetail.status, TaskDetail.webshell_url, TaskDetail.webshell_pass, TaskDetail.webshell_access_tool, TaskDetail.remark, TaskDetail.error_info)
+        if form.attack_queue_query.get('target'):
+            query = query.filter(TaskDetail.target.like('%{}%'.format(form.attack_queue_query['target'])))
+        if form.attack_queue_query.get('task_id'):
+            query = query.filter(TaskDetail.task_id == form.attack_queue_query['task_id'], TaskDetail.user_id == g.user.id)
+        attack_queue = query.limit(form.pagesize).offset(
+            (form.page - 1) * form.pagesize).all()
+        total = query.count()
+        return json_response(data={'attack_queue': [dict(zip(['target', 'name', 'cve', 'status', "webshell_url", "webshell_pass", "webshell_access_tool", "remark", 'error_info'], list(x))) for x in attack_queue], 'total': total})
+    return json_response(message=error)
+
 @blueprint.route('/exec_models', methods=['GET'])
 @require_permission('task_view')
 def search_levels():
@@ -36,14 +55,53 @@ def search_levels():
     return json_response({'data': [x.to_json() for x in exec_models], 'total': total})
 
 
-def task_detail(task_id, user_id):
+def task_result(task_id, user_id):
+    query = TaskDetail.query.filter(
+        TaskDetail.task_id == task_id, TaskDetail.user_id == user_id)
+    if query.count() > 0:
+        query.delete()
     for item in kb.results:
         form = {}
-        form["target"] = item.url
-        form["vul_id"] = item.vul_id
-        form["status"] = 1 if item.status == "success" else 0
-        form["task_id"] = task_id
-        form["user_id"] = user_id
+        if item.status == "success":
+            if "webshell_url" not in item.result.keys():
+                form["webshell_url"] = ""
+            else:
+                form["webshell_url"] = item.result["webshell_url"]
+            if "webshell_pass" not in item.result.keys():
+                form["webshell_pass"] = ""
+            else:
+                form["webshell_pass"] = item.result["webshell_pass"]
+            if "webshell_access_tool" not in item.result.keys():
+                form["webshell_access_tool"] = ""
+            else:
+                form["webshell_access_tool"] = item.result["webshell_access_tool"]
+            if "remark" not in item.result.keys():
+                form["remark"] = ""
+            else:
+                if isinstance(item.result["remark"], dict):
+                    if json.dumps(item.result["remark"]) == "{}":
+                        form["remark"] = ""
+                    else:
+                        form["remark"] = json.dumps(item.result["remark"])
+                else:
+                    form["remark"] = "plugin remark is not json,please modify"
+            form["error_info"] = ""
+            form["target"] = item.url
+            form["vul_id"] = item.vul_id
+            form["status"] = 1
+            form["task_id"] = task_id
+            form["user_id"] = user_id
+        else:
+            form["webshell_url"] = ""
+            form["webshell_pass"] = ""
+            form["webshell_access_tool"] = ""
+            form["remark"] = ""
+            form["error_info"] = item.msg[1]
+            form["target"] = item.url
+            form["vul_id"] = item.vul_id
+            form["status"] = 0
+            form["task_id"] = task_id
+            form["user_id"] = user_id
         task_detail = TaskDetail(**form)
         task_detail.save()
 
@@ -95,7 +153,7 @@ def task_exec(task_id, user_id):
             task.status = 1
             task.save()
             start()
-            task_detail(task_id, user_id)
+            task_result(task_id, user_id)
             task.status = 2
             task.save()
         except threading.ThreadError:
@@ -126,6 +184,7 @@ def task_exec(task_id, user_id):
 @require_permission('task_view')
 def start_task(task_id):
     executor.submit(task_exec, task_id, g.user.id)
+    time.sleep(5)
     return json_response()
 
 

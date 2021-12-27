@@ -46,9 +46,9 @@
                 <template slot-scope="scope">
                     <el-button v-if="has_permission('assets_host_edit') && scope.row.status==0" size="small" icon="el-icon-video-play" @click="task_start(scope.row)">启动</el-button>
                     <el-button v-if="has_permission('assets_host_edit') && scope.row.status==1" size="small" icon="el-icon-circle-close" @click="task_stop(scope.row)">终止</el-button>
-                    <el-button v-if="has_permission('assets_host_edit') && scope.row.status!=0" size="small" icon="el-icon-monitor" @click="task_detail(scope.row)">任务详情</el-button>
+                    <el-button v-if="has_permission('assets_host_edit') && scope.row.status!=0" size="small" icon="el-icon-monitor" @click="task_detail_query(scope.row)">任务详情</el-button>
                     <el-button v-if="has_permission('assets_host_edit') && scope.row.status==0" size="small" icon="el-icon-edit" @click="task_edit(scope.row)">编辑</el-button>
-                    
+                    <el-button v-if="has_permission('assets_host_edit') && (scope.row.status==-1 || scope.row.status==2)" size="small" icon="el-icon-edit" @click="task_start(scope.row)">重新运行</el-button>
                     <el-button v-if="has_permission('assets_host_del') && scope.row.status!=1" size="small" icon="el-icon-delete" type="danger" @click="task_delete(scope.row)"
                                :loading="task_query.btn_del_loading">删除
                     </el-button>
@@ -63,7 +63,91 @@
                     :total=" task_query.tasks.total">
             </el-pagination>
         </div>
-        
+        <el-dialog title="任务详情" :visible.sync="dialog_task_detail_visible" width="70%" >
+            <el-tabs v-model="task_detail.activeName">
+                <el-tab-pane label="" name="first">
+                    <el-row>
+                        <el-col :span="16">
+                            <el-form :inline="true" :model="task_query">
+                                <el-form-item>
+                                    <el-input v-model="task_query.name" clearable placeholder="目标IP/域名"></el-input>
+                                </el-form-item>
+                                <el-form-item style="width:18%">
+                                <el-select v-model="task_detail.attack_queue_status" @change="attack_queue_search_by_status()" clearable placeholder="利用结果">
+                                    <el-option v-for="item in task_detail.attack_queue_status_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                                </el-select>
+                                </el-form-item>
+                                <el-form-item style="width:12%">
+                                    <el-button type="primary" icon="el-icon-search" @click="task_search()">查询</el-button>
+                                </el-form-item>
+                            </el-form>
+                        </el-col>
+                        <el-col :span="8"  style="text-align: right">
+                            <el-button  icon="el-icon-refresh" @click="task_refresh()">刷新</el-button>
+                        </el-col>
+                    </el-row>
+                    <el-table :data="task_detail.attack_queue">
+                        <el-table-column type="expand" >
+                            <template slot-scope="props">
+                                <el-form  class="demo-table-expand" label-width="auto">
+                                    <el-form-item label="Webshell访问链接:" style="width:100%" v-if="props.row.webshell_url!=''">
+                                        <span>{{ props.row.webshell_url }}</span>
+                                    </el-form-item>
+                                    <el-form-item label="Webshell访问密码:" style="width:100%" v-if="props.row.webshell_pass!=''">
+                                        <span>{{ props.row.webshell_pass }}</span>
+                                    </el-form-item>
+                                    <el-form-item label="Webshell访问工具:" style="width:100%" v-if="props.row.webshell_access_tool!=''" >
+                                        <span>{{ props.row.webshell_access_tool }}</span>
+                                    </el-form-item>
+                                    <el-form-item label="漏洞利用其他返回数据:" style="width:100%" v-if="props.row.remark!=''" >
+                                        <span>{{ props.row.remark }}</span>
+                                    </el-form-item>
+                                    <el-form-item label="漏洞利用失败原因:" style="width:100%" v-if="props.row.error_info!=''">
+                                        <span>{{ props.row.error_info }}</span>
+                                    </el-form-item>
+                                </el-form>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="target" label="目标" width="200"></el-table-column>
+                        <el-table-column prop="name" label="漏洞名称" width="400"  ></el-table-column>
+                        <el-table-column prop="cve" label="漏洞编号" width="200"></el-table-column>
+                        <el-table-column prop="status" label="结果" >
+                            <template slot-scope="scope">
+                                <div v-if="scope.row.status==0">
+                                    <el-tag type="danger">失败</el-tag>
+                                </div>
+                                <div v-if="scope.row.status==1">
+                                    <el-tag type="success">成功</el-tag>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <div class="pagination-bar" >
+                        <el-pagination
+                                @current-change="handle_attack_queue_current_change"
+                                :current-page="task_detail.current_attack_queue_page"  layout="total, prev, pager, next"
+                                :total=" task_detail.attack_queue_total" >
+                        </el-pagination>
+                    </div>
+                </el-tab-pane>
+                <!--<el-tab-pane label="打击成功" name="second">
+                    <el-table :data="task_detail.attack_success_queue">
+                        <el-table-column prop="target" label="目标" width="150"></el-table-column>
+                        <el-table-column prop="webshell_url" label="资源访问链接" width="200" :show-overflow-tooltip="true"></el-table-column>
+                        <el-table-column prop="webshell_pass" label="资源访问密码" :show-overflow-tooltip="true"></el-table-column>
+                        <el-table-column prop="webshell_access_tool" label="资源访问工具" :show-overflow-tooltip="true"></el-table-column>
+                        <el-table-column prop="remark" label="其他信息" :show-overflow-tooltip="true"></el-table-column>
+                    </el-table>
+                    <div class="pagination-bar">
+                        <el-pagination
+                                @current-change="handle_task_current_change"
+                                :current-page="task_query.current_task_page"  layout="total, prev, pager, next"
+                                :total=" task_query.tasks.total">
+                        </el-pagination>
+                    </div>
+                </el-tab-pane>-->
+            </el-tabs>
+        </el-dialog>
         <el-dialog :visible.sync="dialog_visible" :title="title" v-if="dialog_visible" width="80%"  :close-on-click-modal="false">
             <el-steps :active="create_task_form.active" process-status="process" finish-status="success">
                 <el-step title="任务" description="输入任务名称及描述">></el-step>
@@ -218,12 +302,55 @@ http://192.168.1.2:8080/
         margin-bottom: 0;
         width: 50%;
     }
+    .el-tooltip__popper {
+
+        max-width: 800px;
+
+    }
 </style>
 
 <script>
     export default {
         data () {
             return {
+                dialog_task_detail_visible: false,
+                task_detail:{
+                    activeName: 'first',
+                    current_task_id:0,
+                    attack_queue: [
+                        {
+                            target: '127.0.0.1',
+                            name: '王小虎',
+                            cve: 'cve-1111-2222',
+                            webshell_url:"https://192.168.2.101:8443/JCRikOXK.jsp",
+                            webshell_pass:"rebeyond",
+                            webshell_access_tool:"behinder",
+                            remark:"最近的项目中使用到element-ui组件库，由于做的是后台管理系统，所以经常需要操作表格，编辑样式的过程中遇到一些问题，官网针对table给出了很多的api，自己可以自定义，基本能满足产品需求，但是没有给出具体的案例，网上的资料也比较简略，这里简单整理下一些常用的操作，如果有类似的功能可以做一个参考。\
+具体的使用方法还是建议仔细阅读官网-table章节：",
+                            status:"1",
+                            error_info:""
+                        }],
+                    attack_queue_total:0,
+                    attack_success_queue_total:0,
+                    current_attack_queue_page: 1,
+                    current_attack_success_queue_page: 1,
+                    attack_success_queue:[
+                        {
+                            target: '127.0.0.1',
+                            name: '王小虎',
+                            cve: 'cve-1111-2222',
+                            webshell_url:"https://192.168.2.101:8443/JCRikOXK.jsp",
+                            webshell_pass:"rebeyond",
+                            webshell_access_tool:"behinder",
+                            status:"1"
+                        }
+                    ],
+                    attack_queue_status:"",
+                    attack_queue_status_options:[
+                        {"id":0,"name":"失败"},
+                        {"id":1,"name":"成功"}
+                    ]
+                },
                 task_query:{
                     name:"",
                     task_status:"",
@@ -288,6 +415,29 @@ http://192.168.1.2:8080/
             }
         },
         methods: {
+            handle_attack_queue_current_change(val) {
+                this.task_detail.current_attack_queue_page = val;
+                this.task_detail_query();
+            },
+            task_detail_query(row) {
+                let form={
+                        target:"",
+                        task_id:row.id
+                    }
+                this.task_detail.current_task_id=row.id;
+                this.$http.post("/api/task/detail/attack_queue/",{page: this.task_detail.current_attack_queue_page, attack_queue_query: form}).then(
+                    res=>{
+                        this.task_detail.attack_queue=res.result.attack_queue;
+                        this.task_detail.attack_queue_total=res.result.total;
+                        //this.$http.post()
+                        this.dialog_task_detail_visible=true;
+                    },
+                    res=>{
+                        this.$layer_message(res.result);
+                    }
+                )
+                
+            },
             task_refresh(){
                 this.task_search(this.task_query.current_task_page);
             },
@@ -295,12 +445,12 @@ http://192.168.1.2:8080/
                 this.$http.get(`/api/task/start/${row.id}`).then(
                     res=>{
                         this.$layer_message('任务启动成功', 'success');
+                        
                     },
                     res=>{
                         this.$layer_message('任务启动失败');
                     }
-                );
-                this.task_search(this.task_query.current_task_page);
+                ).then(()=>{this.task_search(this.task_query.current_task_page);});
             },
             task_search_by_status(){
                 this.task_query.current_task_page = 1;

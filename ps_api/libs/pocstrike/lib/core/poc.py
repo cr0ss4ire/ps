@@ -296,7 +296,7 @@ class Output(object):
     def fail(self, error=""):
         assert isinstance(error, str)
         self.status = OUTPUT_STATUS.FAILED
-        # self.msg = (0, error)
+        self.msg = (0, error)
 
     def error(self, error=""):
         # self.expt = (ERROR_TYPE_ID.OTHER, error)

