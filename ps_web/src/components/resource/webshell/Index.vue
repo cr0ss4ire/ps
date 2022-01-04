@@ -1,0 +1,601 @@
+<template>
+    <div>
+        <el-row>
+            <el-col :span="16">
+                <el-form :inline="true" :model="webshell_query">
+                    <el-form-item style="width:20%">
+                        <el-input v-model="webshell_query.target" clearable placeholder="目标IP/域名"></el-input>
+                    </el-form-item>
+                    <!--<el-form-item style="width:20%">
+                    <el-select v-model="plugin_query.vul_type_id" @change="plugin_search_by_vultype()" clearable placeholder="资源语言">
+                        <el-option v-for="item in plugin_query.vultype_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                    </el-select>
+                    </el-form-item>-->
+                    <el-form-item style="width:20%">
+                    <el-select v-model="webshell_query.public" @change="webshell_search_by_property()" clearable placeholder="资源属性">
+                        <el-option v-for="item in webshell_query.property_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                    </el-select>
+                    </el-form-item>
+                    <!--<el-form-item style="width:11%">
+                    <el-select v-model="plugin_query.effect_id" @change="plugin_search_by_effect()" clearable placeholder="利用效果">
+                        <el-option v-for="item in plugin_query.effect_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                    </el-select>
+                    </el-form-item>
+                    <el-form-item style="width:11%">
+                    <el-select v-model="plugin_query.application_id" @change="plugin_search_by_application()" clearable placeholder="应用名称">
+                        <el-option v-for="item in plugin_query.application_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                    </el-select>
+                    </el-form-item>
+                    <el-form-item style="width:11%"> 
+                    <el-select v-model="plugin_query.category_id" @change="plugin_search_by_category()" clearable placeholder="应用归类">
+                        <el-option v-for="item in plugin_query.category_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                    </el-select>
+                    </el-form-item>-->
+                    <el-form-item style="width:11%">
+                        <el-button type="primary" icon="el-icon-search" @click="plugin_search()">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-col>
+            <el-col :span="8"  style="text-align: right">
+                <el-button  icon="el-icon-refresh" @click="plugin_refresh()">刷新</el-button>
+                <el-button v-if="has_permission('exploit_plugin_add')" type="primary" icon="el-icon-plus" @click="handle_plugin_add">添加资源</el-button>
+            </el-col>
+        </el-row>
+        <el-row></el-row>
+        <el-table :data="webshell_query.webshells.data" highlight-current-row :row-key="get_row_keys"  v-loading="webshell_query.table_loading" style="width: 100%; margin-top: 20px">
+            <!--<el-table-column type="expand">
+                <template slot-scope="props">
+                    <el-form v-if="props.row.extend" label-position="left"  inline class="demo-table-expand">
+                        <el-form-item label="目标版本:"><span>{{ props.row.extend.affect_version }}</span></el-form-item>
+                        <el-form-item label=""><span></span></el-form-item>
+                        <el-form-item label="目标语言:"><span>{{ props.row.extend.language_name }}</span></el-form-item>
+                        <el-form-item label=""><span></span></el-form-item>
+                        <el-form-item label="目标系统:"><span>{{ props.row.extend.os }}</span></el-form-item>
+                        <el-form-item label=""><span></span></el-form-item>
+                        <el-form-item label="提交时间:"><span>{{ props.row.extend.enter_time }}</span></el-form-item>
+                        <el-form-item label=""><span></span></el-form-item>
+                        <el-form-item label="更新时间:"><span>{{ props.row.extend.update_time }}</span></el-form-item>
+                        <el-form-item label=""><span></span></el-form-item>
+                        <el-form-item label="漏洞描述:" label-width="150px" style="width:80%"><span>{{ props.row.extend.desc }}</span></el-form-item>
+                        <el-form-item label="PocStrike插件:" label-width="150px" style="width:80%">
+                            <el-link v-if="props.row.extend.plugin_file_name" type="primary" :href="plugin_query.plugin_download_url" icon="el-icon-download">{{ props.row.extend.plugin_file_name }}
+                            </el-link>
+                            <span v-else>无漏洞插件</span>
+                        </el-form-item>
+                        <el-form-item label="独立利用工具:" label-width="150px" style="width:80%">
+                            <el-link v-if="props.row.extend.standalone_tool_file_name" type="primary" :href="plugin_query.standalone_tool_download_url" icon="el-icon-download">{{ props.row.extend.standalone_tool_file_name }}</el-link>
+                            <span v-else>无漏洞独立利用工具</span>
+                        </el-form-item>
+                        <el-form-item label="Docker虚拟环境:" label-width="150px" style="width:80%">
+                            <el-link v-if="props.row.extend.docker_file_name" type="primary" :href="plugin_query.docker_download_url" icon="el-icon-download">{{ props.row.extend.docker_file_name }}</el-link>
+                            <span v-else>无Docker虚拟环境</span>
+                        </el-form-item>
+                        <el-form-item label="其他虚拟环境备注:" label-width="150px" style="width:80%"><span>{{ props.row.extend.virtual_machine_remarks }}</span></el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>-->
+
+            <el-table-column prop="exploit_name" label="访问链接"></el-table-column>
+            <el-table-column prop="cve" label="密码"></el-table-column>
+            <el-table-column prop="vultype_name" label="访问工具"></el-table-column>
+            <el-table-column prop="level_name" label="是否公开"></el-table-column>
+            <!--<el-table-column prop="effect_name" label="利用效果"></el-table-column>
+            <el-table-column prop="application_name" label="应用名称"></el-table-column>
+            <el-table-column prop="category_name" label="应用归类"></el-table-column>
+            <el-table-column prop="author" label="提交者"></el-table-column>-->
+            <el-table-column label="操作" width="300px" v-if="has_permission('assets_host_edit|assets_host_del|assets_host_valid')">
+                <template slot-scope="scope">
+                    <el-button v-if="has_permission('assets_host_edit')" size="small" icon="el-icon-edit" @click="plugin_edit(scope.row)">编辑</el-button>
+                    <el-button v-if="has_permission('assets_host_del')" size="small" icon="el-icon-delete" type="danger" @click="plugin_delete(scope.row)"
+                               :loading="plugin_query.btn_del_loading">删除
+                    </el-button>
+                    <el-button v-if="has_permission('assets_host_del')" size="small" icon="el-icon-delete" type="danger" @click="plugin_delete(scope.row)"
+                               :loading="plugin_query.btn_del_loading">公开
+                    </el-button>
+                    <el-button v-if="has_permission('assets_host_del')" size="small" icon="el-icon-delete" type="danger" @click="plugin_delete(scope.row)"
+                               :loading="plugin_query.btn_del_loading">私有
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <!--分页-->
+        <div class="pagination-bar">
+            <el-pagination
+                    @current-change="handle_current_change"
+                    :current-page="webshell_query.current_page"  layout="total, prev, pager, next"
+                    :total="webshell_query.webshells.total">
+            </el-pagination>
+        </div>
+
+        <el-dialog :visible.sync="dialog_visible" :title="title" v-if="dialog_visible" width="80%"  :close-on-click-modal="false">
+            <el-tabs v-model="create_plugin.active_name" >
+                <el-tab-pane label="" name="first">
+                    <el-form :model="create_plugin.form" :rules="create_vulnerability_rules" label-width="150px">
+                        <el-form-item label="漏洞名称" prop="name">
+                            <el-input v-model="create_plugin.form.name" placeholder="漏洞名称，例如：SharePoint(CVE-2019-0604) Rce 漏洞"></el-input>
+                        </el-form-item>
+                        <el-form-item label="漏洞编号" prop="cve" required>
+                            <el-input v-model="create_plugin.form.cve" placeholder="漏洞cve编号，例如：CVE-2019-0604"></el-input>
+                        </el-form-item>
+                        <el-form-item label="漏洞类型" prop="vul_type_id">
+                            <el-select v-model="create_plugin.form.vul_type_id" placeholder="所属漏洞类型">
+                                <el-option v-for="item in plugin_query.vultype_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="危害等级" prop="vullevel_id">
+                            <el-select v-model="create_plugin.form.vullevel_id" placeholder="危害等级">
+                                <el-option v-for="item in plugin_query.level_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="利用效果" prop="effect_id">
+                            <el-select v-model="create_plugin.form.effect_id" placeholder="利用效果">
+                                <el-option v-for="item in plugin_query.effect_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="应用名称" prop="application_id">
+                            <el-select v-model="create_plugin.form.application_id" placeholder="应用名称">
+                                <el-option v-for="item in plugin_query.application_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="应用归类" prop="category_id">
+                            <el-select v-model="create_plugin.form.category_id" placeholder="应用归类">
+                                <el-option v-for="item in plugin_query.category_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="目标版本" prop="affect_version">
+                            <el-input v-model="create_plugin.form.affect_version" placeholder="适用于该漏洞的应用版本，例如：Apache Solr 5.0.0 - 8.3.1"></el-input>
+                        </el-form-item>
+                        <el-form-item label="目标语言" prop="language_id">
+                            <el-select v-model="create_plugin.form.language_id" placeholder="目标语言">
+                                <el-option v-for="item in plugin_query.language_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="目标系统" prop="os">
+                            <el-input v-model="create_plugin.form.os" placeholder="适用于该漏洞的系统，例如：windows、linux"></el-input>
+                        </el-form-item>
+                      
+                        <el-form-item label="漏洞原理描述" prop="desc">
+                            <el-input v-model="create_plugin.form.desc" type="textarea" :autosize="{ minRows: 5}" placeholder="漏洞原理描述信息"></el-input>
+                        </el-form-item>
+                        <el-form-item label="PocStrike插件"  required>
+                            <el-upload class="upload-demo"   drag :file-list="create_plugin.plugin_file_list" list-type="text"  :before-upload="plugin_file_before_upload" :on-remove="plugin_file_on_remove" :limit="1"  action="" :multiple="false">
+                                <i class="el-icon-upload"></i>
+                                <div class="el-upload__text">将py文件拖到此处，或<em>点击上传</em></div>
+                                <div class="el-upload__tip" slot="tip">只能上传单个py文件</div>
+                            </el-upload>
+                        </el-form-item>
+                        <el-form-item label="独立利用工具"  required>
+                            <el-upload class="upload-demo"   drag :file-list="create_plugin.standalone_tool_file_list" list-type="text"  :before-upload="standalone_tool_before_upload" :on-remove="standalone_tool_on_remove" :limit="1"  action="" :multiple="false">
+                                <i class="el-icon-upload"></i>
+                                <div class="el-upload__text">将zip或rar文件拖到此处，或<em>点击上传</em></div>
+                                <div class="el-upload__tip" slot="tip">只能上传zip或rar文件(包含漏洞利用工具、漏洞分析文档、利用工具使用文档等)</div>
+                            </el-upload>
+                        </el-form-item>
+                        <el-form-item label="Docker虚拟环境">
+                            <el-upload class="upload-demo"   drag :file-list="create_plugin.docker_file_list" list-type="text"  :before-upload="docker_before_upload" :on-remove="docker_on_remove" :limit="1"  action="" :multiple="false">
+                                <i class="el-icon-upload"></i>
+                                <div class="el-upload__text">将zip或rar文件拖到此处，或<em>点击上传</em></div>
+                                <div class="el-upload__tip" slot="tip">只能上传zip或rar文件(包含docker虚拟容器，容器启动文档等)</div>
+                            </el-upload>
+                        </el-form-item>
+                        <el-form-item label="其他虚拟环境备注" prop="virtual_machine_remarks">
+                            <el-input v-model="create_plugin.form.virtual_machine_remarks" type="textarea" :autosize="{ minRows: 5}" placeholder="说明怎么可以下载到该漏洞其他虚拟机环境(Vmware、Virtualbox)等等)"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </el-tab-pane>
+            </el-tabs>
+
+            <div slot="footer">
+                <el-button @click="dialog_visible=false">取消</el-button>
+                <el-button type="primary" @click="plugin_commit" :loading="create_plugin.btn_save_loading">提交</el-button>
+            </div>
+        </el-dialog>
+    </div>
+</template>
+
+
+<style>
+    .demo-table-expand {
+        font-size: 0;
+    }
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
+    }
+</style>
+
+<script>
+    export default {
+        data () {
+            return {
+                webshell_query: {
+                    target: '',
+                    public:"",
+                    btn_del_loading: false,
+                    table_loading: true,
+                    webshells: {},
+                    current_page: 1,
+                    property_options: [
+                        {"id":0,"name":"未公开"},
+                        {"id":1,"name":"已公开"}
+                    ]
+                },
+                create_plugin:{
+                    form:{
+                        name:"",
+                        cve:"",
+                        vul_type_id:"",
+                        vullevel_id:"",
+                        effect_id:"",
+                        application_id: '',
+                        category_id: '',
+                        affect_version:"",
+                        language_id:"",
+                        os:"",
+                        desc:"",
+                        virtual_machine_remarks:"",
+                        plugin_file_path:"",
+                        standalone_tool_file_path:"",
+                        docker_file_path:"",
+                    },
+                    btn_save_loading: false,
+                    active_name:'first',
+                    plugin_file_name:"",
+                    plugin_file_list:[],
+                    standalone_tool_name:"",
+                    standalone_tool_file_list:[],
+                    docker_name:"",
+                    docker_file_list:[]
+                },
+                dialog_visible: false,
+                title: '',
+                create_vulnerability_rules: {
+                    name: [
+                        { required: true, message: '漏洞名称不能为空', trigger: ['blur','change'] }
+                    ],
+                    cve: [
+                    { required: true, message: '漏洞编号不能为空', trigger: ['blur','change'] }
+                    ],
+                    vul_type_id: [
+                    { required: true}
+                    ],
+                    vullevel_id: [
+                    { required: true}
+                    ],
+                    effect_id: [
+                    { required: true}
+                    ],
+                    application_id: [
+                    { required: true}
+                    ],
+                    category_id: [
+                    { required: true}
+                    ],
+                    affect_version: [
+                    { required: true, message: '目标版本不能为空', trigger: ['blur','change'] }
+                    ],
+                    language_id: [
+                    { required: true}
+                    ],
+                    os: [
+                    { required: true, message: '目标系统不能为空', trigger: ['blur','change'] }
+                    ],
+                    desc: [
+                    { required: true, message: '漏洞原理描述不能为空', trigger: ['blur','change'] }
+                    ],
+                    virtual_machine_remarks: [
+                    { required: false }
+                    ]
+                }
+                
+            }
+        },
+        methods: {
+            docker_on_remove(file, fileList) {
+                if(file.status=="success"){
+                    if(!this.create_plugin.plugin_edit){
+                        this.$http.post(`/api/exploit/docker_remove`, file).then(
+                            res=>{
+                                this.$layer_message(res.result.status, 'success');
+                                this.create_plugin.docker_name = "";
+                                this.create_plugin.docker_file_list=[];
+                                this.create_plugin.form.docker_file_path="";
+                            },
+                            res=>{
+                                this.$layer_message(res.result)
+                            }
+                        )
+                    }
+                    else{
+                        this.$layer_message("Docker虚拟环境删除成功", 'success');
+                        this.create_plugin.docker_name = "";
+                        this.create_plugin.docker_file_list=[];
+                        this.create_plugin.form.docker_file_path="";
+                    }
+                    
+                }
+            },
+            docker_before_upload(file){
+                let fd = new FormData();
+                fd.append('docker_file',file);
+                this.$http.post("/api/exploit/docker_upload",fd).then(
+                    res =>{
+                        this.create_plugin.docker_name = file.name;
+                        this.create_plugin.docker_file_list=res.result.file_list;
+                        this.create_plugin.form.docker_file_path=res.result.file_list[0].path
+                        this.$layer_message(res.result.status,"success");
+                    },
+                    res => this.$layer_message(res.result)
+                )
+                
+                return false
+            },
+            standalone_tool_on_remove(file, fileList) {
+                if(file.status=="success"){
+                    this.$http.post(`/api/exploit/standalone_tool_remove`, file).then(
+                        res=>{
+                            this.$layer_message(res.result.status, 'success');
+                            this.create_plugin.standalone_tool_name = "";
+                            this.create_plugin.standalone_tool_file_list=[];
+                            this.create_plugin.form.standalone_tool_file_path="";
+                        },
+                        res=>{
+                            this.$layer_message(res.result)
+                        }
+                    )
+                }
+            },
+            standalone_tool_before_upload(file){
+                let fd = new FormData();
+                fd.append('standalone_tool_file',file);
+                this.$http.post("/api/exploit/standalone_tool_upload",fd).then(
+                    res =>{
+                        this.create_plugin.standalone_tool_name = file.name;
+                        this.create_plugin.standalone_tool_file_list=res.result.file_list;
+                        this.create_plugin.form.standalone_tool_file_path=res.result.file_list[0].path
+                        this.$layer_message(res.result.status,"success");
+                    },
+                    res => this.$layer_message(res.result)
+                )
+                
+                return false
+            },
+            plugin_file_on_remove(file, fileList){
+                if(file.status=="success"){
+                    this.$http.post(`/api/exploit/plugin_remove`, file).then(
+                        res=>{
+                            this.$layer_message(res.result.status, 'success');
+                            this.create_plugin.plugin_file_name = "";
+                            this.create_plugin.plugin_file_list=[];
+                            this.create_plugin.form.plugin_file_path="";
+                        },
+                        res=>{
+                            this.$layer_message(res.result)
+                        }
+                    )
+                }
+                
+                
+                
+            },
+            plugin_file_before_upload(file){
+                let fd = new FormData();
+                fd.append('plugin_file',file);
+                this.$http.post("/api/exploit/plugin_upload",fd).then(
+                    res =>{
+                        this.create_plugin.plugin_file_name = file.name;
+                        this.create_plugin.plugin_file_list=res.result.file_list;
+                        this.create_plugin.form.plugin_file_path=res.result.file_list[0].path
+                        this.$layer_message(res.result.status,"success");
+                    },
+                    res => this.$layer_message(res.result)
+                )
+                
+                return false
+            },
+            plugin_refresh(){
+                this.plugin_search(this.plugin_query.current_page);
+            },
+            get_row_keys(row) {
+                    return row.id;
+            },
+            handle_current_change(val) {
+                this.plugin_query.current_page = val;
+                this.plugin_search(this.plugin_query.current_page);
+            },
+            plugin_search_by_vultype(){
+                this.plugin_query.current_page = 1;
+                this.plugin_search();
+            },
+            plugin_search_by_level(){
+                this.plugin_query.current_page = 1;
+                this.plugin_search();
+            },
+            plugin_search_by_effect(){
+                this.plugin_query.current_page = 1;
+                this.plugin_search();
+            },
+            plugin_search_by_application(){
+                this.plugin_query.current_page = 1;
+                this.plugin_search();
+            },
+            plugin_search_by_category(){
+                this.plugin_query.current_page = 1;
+                this.plugin_search();
+            },
+            get_vul_types () {
+                this.$http.get('/api/exploit/vultypes').then(res => {
+                    this.plugin_query.vultype_options = res.result.data
+                }, res => this.$layer_message(res.result))
+            },
+            get_levels () {
+                this.$http.get('/api/exploit/levels').then(res => {
+                    this.plugin_query.level_options = res.result.data
+                }, res => this.$layer_message(res.result))
+            },
+            get_effects () {
+                this.$http.get('/api/exploit/effects').then(res => {
+                    this.plugin_query.effect_options = res.result.data
+                }, res => this.$layer_message(res.result))
+            },
+            get_applications () {
+                this.$http.get('/api/exploit/applications').then(res => {
+                    this.plugin_query.application_options = res.result.data
+                }, res => this.$layer_message(res.result))
+            },
+            get_categories () {
+                this.$http.get('/api/exploit/categories').then(res => {
+                    this.plugin_query.category_options = res.result.data
+                }, res => this.$layer_message(res.result))
+            },
+            get_languages () {
+                this.$http.get('/api/exploit/languages').then(res => {
+                    this.plugin_query.language_options = res.result.data
+                }, res => this.$layer_message(res.result))
+            },
+            webshell_search () {
+                let form={
+                    target:this.webshell_query.target,
+                    public:this.webshell_query.public
+                }
+                this.webshell_query.table_loading = true;
+                let api_uri = '/api/resource/webshell';
+                this.$http.get(api_uri, {page: this.webshell_query.current_page, webshell_query: form}).then(res => {
+                    this.webshell_query.webshells = res.result
+                }, res => this.$layer_message(res.result)).finally(() => this.webshell_query.table_loading = false)
+            },
+
+            get_plugin_extend (row, expanded) {
+                if (expanded.length>0) {
+                    this.plugin_query.expands = [];
+                    this.plugin_query.expands.push(row.id);
+                    this.$http.get(`/api/exploit/plugins/${row.id}/extend`).then(res => {
+                        this.$set(row, 'extend', res.result);
+                        this.plugin_query.plugin_download_url=`/api/exploit/plugin_download/${row.id}?x-token=`+localStorage.getItem('token');
+                        this.plugin_query.standalone_tool_download_url=`/api/exploit/standalone_tool_download/${row.id}?x-token=`+localStorage.getItem('token');
+                        this.plugin_query.docker_download_url=`/api/exploit/docker_download/${row.id}?x-token=`+localStorage.getItem('token');
+                    }, res => this.$layer_message(res.result))
+                }
+                else{
+                    this.plugin_query.expands = [];
+                }
+            },
+
+            handle_plugin_add () {
+                this.create_plugin.form = {};
+                this.create_plugin.plugin_file_name = "";
+                this.create_plugin.plugin_file_list=[];
+                this.create_plugin.standalone_tool_name="";
+                this.create_plugin.standalone_tool_file_list=[];
+                this.create_plugin.docker_name="";
+                this.create_plugin.docker_file_list=[];
+                this.title = '添加漏洞';
+                this.dialog_visible = true;
+            },
+
+            plugin_edit(row) {
+                this.create_plugin.form={};
+                this.create_plugin.plugin_file_name = "";
+                this.create_plugin.plugin_file_list=[];
+                this.create_plugin.standalone_tool_name="";
+                this.create_plugin.standalone_tool_file_list=[];
+                this.create_plugin.docker_name="";
+                this.create_plugin.docker_file_list=[];
+                this.$http.get(`/api/exploit/plugins/${row.id}`).then(res => {
+                        this.create_plugin.form = res.result;
+                        if(res.result.plugin_file_path){
+                            let temp=res.result.plugin_file_path.split("_");
+                            temp.shift();
+                            let file_name=temp.join("_");
+                            this.create_plugin.plugin_file_name=file_name;
+                            this.create_plugin.plugin_file_list=[{name:file_name,path:res.result.plugin_file_path}];
+                        }
+                        else{
+                            this.create_plugin.plugin_file_name="";
+                            this.create_plugin.plugin_file_list=[];
+                        }
+                        if(res.result.standalone_tool_file_path){
+                            let temp=res.result.standalone_tool_file_path.split("_");
+                            temp.shift();
+                            let file_name=temp.join("_");
+                            this.create_plugin.standalone_tool_name=file_name;
+                            this.create_plugin.standalone_tool_file_list=[{name:file_name,path:res.result.standalone_tool_file_path}];
+                        }
+                        else{
+                            this.create_plugin.standalone_tool_name="";
+                            this.create_plugin.standalone_tool_file_list=[];
+                        }
+                        if(res.result.docker_file_path){
+                            let temp=res.result.docker_file_path.split("_");
+                            temp.shift();
+                            let file_name=temp.join("_");
+                            this.create_plugin.docker_name=file_name;
+                            this.create_plugin.docker_file_list=[{name:file_name,path:res.result.docker_file_path}];
+                        }
+                        else{
+                            this.create_plugin.docker_name="";
+                            this.create_plugin.docker_file_list=[];
+                        }
+                    }, res => this.$layer_message(res.result))
+                this.dialog_visible = true;
+                this.title = '编辑漏洞';
+            },
+            plugin_commit () {
+                this.create_plugin.btn_save_loading = true;
+                if (this.create_plugin.form.id) {
+                    this.$http.put(`/api/exploit/plugins/${this.create_plugin.form.id}`, this.create_plugin.form).then(
+                        res=>{
+                            this.dialog_visible = false;
+                            this.$layer_message('漏洞插件更新成功', 'success');
+                            this.plugin_search();
+                            this.plugin_query.expands=[];
+                            this.create_plugin.btn_save_loading = false;
+                        },
+                        res=>{
+                            this.$layer_message(res.result)
+                            this.create_plugin.btn_save_loading = false;
+                        }
+                    )
+                } else {
+                    this.$http.post("/api/exploit/plugins", this.create_plugin.form).then(
+                        () => {
+                            this.dialog_visible = false;
+                            this.$layer_message('漏洞插件添加成功', 'success');
+                            this.plugin_search();
+                            this.plugin_query.expands=[];
+                        }, 
+                        res => this.$layer_message(res.result)
+                    ).finally(() => this.create_plugin.btn_save_loading = false)
+                }
+            },
+            plugin_delete(row){
+                this.$confirm('此操作将永久删除该漏洞，是否继续？', '删除确认', {type: 'warning'}).then(() => {
+                    this.plugin_query.btn_del_loading = true;
+                    this.$http.delete(`/api/exploit/plugins/${row.id}`).then(
+                        res => {
+                            this.$layer_message(res.result.msg,"success");
+                            this.plugin_search(this.plugin_query.current_page);
+                        },
+                        res => this.$layer_message(res.result)
+                        ).finally(() => this.plugin_query.btn_del_loading = false)
+                }).catch(() => {
+                })
+            }
+        },
+        created () {
+            this.webshell_search();
+            /*this.get_vul_types();
+            this.get_levels ();
+            this.get_effects();
+            this.get_applications();
+            this.get_categories();
+            this.get_languages();*/
+        }
+    }
+</script>

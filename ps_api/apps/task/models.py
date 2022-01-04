@@ -18,6 +18,7 @@ class Task(db.Model, ModelMixin):
     finish_time = db.Column(db.String(255))
     exec_model_id = db.Column(db.ForeignKey('exec_model.id', ondelete='CASCADE'))
     status = db.Column(db.Integer)
+    task_detail = db.relationship("TaskDetail", backref="task", lazy='dynamic', cascade="all, delete-orphan")
 
     def __repr__(self):
         return '<Task name=%r>' % (self.name)
@@ -39,7 +40,7 @@ class TaskDetail(db.Model, ModelMixin):
     user_id = db.Column(db.ForeignKey('account_users.id', ondelete='CASCADE'))
 
     def __repr__(self):
-        return '<Task target=%r>' % (self.target)
+        return '<TaskDetail target=%r>' % (self.target)
 
 
 class ExecModel(db.Model, ModelMixin):
@@ -47,6 +48,7 @@ class ExecModel(db.Model, ModelMixin):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255))
+    task = db.relationship("Task", backref="exce_model", lazy='dynamic', cascade="all, delete-orphan")
 
     def __repr__(self):
         return '<ExecModel %r>' % self.name

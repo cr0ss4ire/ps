@@ -5,8 +5,9 @@ import Welcome from './components/Welcome.vue'
 import Login from './components/Login.vue'
 import Layout from './components/Layout.vue'
 import account_routes from './components/account/routes'
-import exploit_routes from './components/exploit/routes'
+import vulnerability_routes from './components/vulnerability/routes'
 import task_routes from './components/task/routes'
+import resource_routes from './components/resource/webshell/routes'
 
 const routes = [
     {
@@ -24,12 +25,16 @@ const routes = [
         routes: account_routes
     },
     {
-        path: 'exploit',
-        routes: exploit_routes
+        path: 'vulnerability',
+        routes: vulnerability_routes
     },
     {
         path: 'task',
         routes: task_routes
+    },
+    {
+        path: 'resource/webshell',
+        routes: resource_routes
     },
     {
         path: '*',

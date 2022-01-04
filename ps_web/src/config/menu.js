@@ -11,8 +11,8 @@ let menu = {
             ]
         },
         {
-            key: '9', desc: '漏洞管理', icon: 'el-icon-monitor',  permission: 'exploit_view',  subs: [
-                {key: '/exploit/plugins', permission: 'exploit_view', desc: '漏洞列表'},
+            key: '9', desc: '漏洞管理', icon: 'el-icon-monitor',  permission: 'vulnerability_view',  subs: [
+                {key: '/vulnerability/index', permission: 'vulnerability_view', desc: '漏洞列表'},
             ]
         },
         {
@@ -22,7 +22,7 @@ let menu = {
         },
         {
             key: '11', desc: '资源管理', icon: 'el-icon-receiving',  permission: 'exploit_view',  subs: [
-                {key: '/resource/webshell/index', permission: 'exploit_view', desc: 'Webshell列表'},
+                {key: '/resource/webshell/index', permission: 'webshell_view', desc: 'Webshell列表'},
                 {key: '/resource/shell/index', permission: 'exploit_view', desc: '反弹Shell列表'}
             ]
         },

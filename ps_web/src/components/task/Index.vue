@@ -63,27 +63,27 @@
                     :total=" task_query.tasks.total">
             </el-pagination>
         </div>
-        <el-dialog title="任务详情" :visible.sync="dialog_task_detail_visible" width="70%" >
+        <el-dialog title="任务详情" :visible.sync="dialog_task_detail_visible" width="70%" :close-on-click-modal="false">
             <el-tabs v-model="task_detail.activeName">
                 <el-tab-pane label="" name="first">
                     <el-row>
                         <el-col :span="16">
-                            <el-form :inline="true" :model="task_query">
+                            <el-form :inline="true" :model="task_detail">
                                 <el-form-item>
-                                    <el-input v-model="task_query.name" clearable placeholder="目标IP/域名"></el-input>
+                                    <el-input v-model="task_detail.attack_queue_target" clearable placeholder="目标IP/域名"></el-input>
                                 </el-form-item>
                                 <el-form-item style="width:18%">
-                                <el-select v-model="task_detail.attack_queue_status" @change="attack_queue_search_by_status()" clearable placeholder="利用结果">
+                                <el-select v-model="task_detail.attack_queue_status" @change="attack_queue_query()" clearable placeholder="利用结果">
                                     <el-option v-for="item in task_detail.attack_queue_status_options" :label="item.name" :key="item.id" :value="item.id"></el-option>
                                 </el-select>
                                 </el-form-item>
                                 <el-form-item style="width:12%">
-                                    <el-button type="primary" icon="el-icon-search" @click="task_search()">查询</el-button>
+                                    <el-button type="primary" icon="el-icon-search" @click="attack_queue_query()">查询</el-button>
                                 </el-form-item>
                             </el-form>
                         </el-col>
                         <el-col :span="8"  style="text-align: right">
-                            <el-button  icon="el-icon-refresh" @click="task_refresh()">刷新</el-button>
+                            <el-button  icon="el-icon-refresh" @click="attack_queue_query()">刷新</el-button>
                         </el-col>
                     </el-row>
                     <el-table :data="task_detail.attack_queue">
@@ -345,6 +345,7 @@ http://192.168.1.2:8080/
                             status:"1"
                         }
                     ],
+                    attack_queue_target:"",
                     attack_queue_status:"",
                     attack_queue_status_options:[
                         {"id":0,"name":"失败"},
@@ -415,21 +416,34 @@ http://192.168.1.2:8080/
             }
         },
         methods: {
+            task_delete(row){
+                this.$confirm('此操作将永久删除该任务，是否继续？', '删除确认', {type: 'warning'}).then(() => {
+                    this.task_query.btn_del_loading = true;
+                    this.$http.delete(`/api/task/index/${row.id}`).then(
+                        res => {
+                            this.$layer_message(res.result.msg,"success");
+                            this.task_search(this.task_query.current_task_page);
+                        },
+                        res => this.$layer_message(res.result)
+                        ).finally(() => this.task_query.btn_del_loading = false)
+                }).catch(() => {
+                })
+            },
             handle_attack_queue_current_change(val) {
                 this.task_detail.current_attack_queue_page = val;
-                this.task_detail_query();
+                this.attack_queue_query();
             },
-            task_detail_query(row) {
+            attack_queue_query() {
                 let form={
-                        target:"",
-                        task_id:row.id
+                        target:this.task_detail.attack_queue_target,
+                        task_id:this.task_detail.current_task_id,
+                        status:this.task_detail.attack_queue_status
                     }
-                this.task_detail.current_task_id=row.id;
+                this.task_detail.current_attack_queue_page = 1;
                 this.$http.post("/api/task/detail/attack_queue/",{page: this.task_detail.current_attack_queue_page, attack_queue_query: form}).then(
                     res=>{
                         this.task_detail.attack_queue=res.result.attack_queue;
                         this.task_detail.attack_queue_total=res.result.total;
-                        //this.$http.post()
                         this.dialog_task_detail_visible=true;
                     },
                     res=>{
@@ -437,6 +451,11 @@ http://192.168.1.2:8080/
                     }
                 )
                 
+            },
+            task_detail_query(row){
+                this.task_detail.current_task_id=row.id;
+                this.attack_queue_query();
+
             },
             task_refresh(){
                 this.task_search(this.task_query.current_task_page);

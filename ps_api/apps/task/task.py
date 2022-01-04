@@ -26,6 +26,17 @@ from libs.pocstrike.lib.core.data import kb
 blueprint = Blueprint(__name__, __name__)
 
 
+@blueprint.route('/index/<int:task_id>', methods=['DELETE'])
+@require_permission('task_del')
+def task_delete(task_id):
+    task = Task.query.get_or_404(task_id)
+    try:
+        task.delete()
+        return json_response(data={"msg": "任务删除成功"})
+    except Exception as e:
+        return json_response(data={"msg": str(e)})
+
+
 @blueprint.route('/detail/attack_queue/', methods=['POST'])
 @require_permission('task_view')
 def get_attack_queue():
@@ -38,6 +49,8 @@ def get_attack_queue():
         query = TaskDetail.query.join(Exploit, TaskDetail.vul_id == Exploit.id).with_entities(TaskDetail.target, Exploit.name, Exploit.cve, TaskDetail.status, TaskDetail.webshell_url, TaskDetail.webshell_pass, TaskDetail.webshell_access_tool, TaskDetail.remark, TaskDetail.error_info)
         if form.attack_queue_query.get('target'):
             query = query.filter(TaskDetail.target.like('%{}%'.format(form.attack_queue_query['target'])))
+        if form.attack_queue_query.get('status') != "":
+            query = query.filter(TaskDetail.status == form.attack_queue_query['status'])
         if form.attack_queue_query.get('task_id'):
             query = query.filter(TaskDetail.task_id == form.attack_queue_query['task_id'], TaskDetail.user_id == g.user.id)
         attack_queue = query.limit(form.pagesize).offset(
@@ -45,6 +58,7 @@ def get_attack_queue():
         total = query.count()
         return json_response(data={'attack_queue': [dict(zip(['target', 'name', 'cve', 'status', "webshell_url", "webshell_pass", "webshell_access_tool", "remark", 'error_info'], list(x))) for x in attack_queue], 'total': total})
     return json_response(message=error)
+
 
 @blueprint.route('/exec_models', methods=['GET'])
 @require_permission('task_view')
@@ -130,7 +144,7 @@ def task_exec(task_id, user_id):
             'referer': None,
             'agent': None,
             'random_agent': False,
-            'proxy': "socks5://127.0.0.1:8111",
+            # 'proxy': "socks5://127.0.0.1:8111",
             'proxy_cred': None,
             'timeout': None,
             'retry': False,
@@ -214,7 +228,7 @@ def get():
             query = query.filter(
                 Task.name.like('%{}%'.format(form.task_query['name'])))
 
-        if form.task_query.get('task_status'):
+        if form.task_query.get('task_status') != "":
             query = query.filter(Task.status ==
                                  form.task_query.get('task_status'))
         query = query.filter(Task.user_id == g.user.id).order_by(Task.id.desc())

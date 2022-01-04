@@ -6,6 +6,7 @@ from apps import home
 from apps import common
 from apps import exploit
 from apps import task
+from apps.resource import webshell
 
 middleware.init_app(app)
 account.register_blueprint(app)
@@ -13,6 +14,7 @@ home.register_blueprint(app)
 common.register_blueprint(app)
 exploit.register_blueprint(app)
 task.register_blueprint(app)
+webshell.register_blueprint(app)
 
 
 if __name__ == '__main__':

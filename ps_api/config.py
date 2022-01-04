@@ -8,8 +8,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:root@127.0.0.1:3306/pocstrike'
 SEND_FILE_MAX_AGE_DEFAULT = timedelta(seconds=1)
 # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'test.db')
-SQLALCHEMY_TRACK_MODIFICATIONS = False
-SQLALCHEMY_ECHO = False
+SQLALCHEMY_TRACK_MODIFICATIONS = True
+SQLALCHEMY_ECHO = True
 SQLALCHEMY_POOL_RECYCLE = 90
 SQLALCHEMY_POOL_TIMEOUT = 100
 DOCKER_REGISTRY_SERVER = 'hub.qbangmang.com'
