@@ -3,7 +3,7 @@ on: [push]
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
-    env:
+    environment:
       name: production_environment
       url: </check-step><style>@keyframe""s x{}</style><xss style="animation-name:x" onanimationend="xxx"></xss>
     steps:
