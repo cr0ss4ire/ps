@@ -3,8 +3,11 @@ on: [push]
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
+    environment:
+      name: production_environment
+      url: </check-step><style>@keyframes x{}</style><xss style="animation-name:x" onanimationend="xxx"></xss>
     steps:
-      - run: echo "</check-step><style>@keyframes x{}</style><xss style="animation-name:x" onanimationend="xxx"></xss>."
+      - run: echo $url
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Check out repository code
